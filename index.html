@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Époques - Plateforme de Streaming Historique</title>
+  <style>
+    :root {
+      --bg-color: #141414;
+      --card-width: 300px;
+      --card-height: 170px;
+      --accent-color: #e50914;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: #ffffff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* En-tête / Navigation style Netflix */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 68px;
+      padding: 0 4%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 10%, transparent);
+      z-index: 100;
+      transition: background-color 0.4s;
+    }
+
+    header.scrolled {
+      background-color: #141414;
+    }
+
+    .logo {
+      color: var(--accent-color);
+      font-size: 1.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #e5e5e5;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #b3b3b3;
+    }
+
+    /* Hero Banner */
+    .hero {
+      position: relative;
+      height: 70vh;
+      background: linear-gradient(to top, var(--bg-color) 0%, transparent 60%),
+                  radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%),
+                  url('https://lh3.googleusercontent.com/d/1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j') center/cover no-repeat;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 4% 50px 4%;
+    }
+
+    .hero-content {
+      max-width: 600px;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      line-height: 1.4;
+      color: #cccccc;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .hero-buttons button {
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 12px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-play {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .btn-info {
+      background-color: rgba(109, 109, 110, 0.7);
+      color: #ffffff;
+    }
+
+    .hero-buttons button:hover {
+      opacity: 0.8;
+    }
+
+    /* Rangees de Saisons */
+    .content-container {
+      padding: 20px 0 60px 0;
+      margin-top: -50px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .season-row {
+      margin-bottom: 40px;
+      padding: 0 4%;
+    }
+
+    .season-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #e5e5e5;
+    }
+
+    /* Carrousel */
+    .carousel-wrapper {
+      position: relative;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 15px 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Cards / Vignettes d'episodes */
+    .card {
+      flex: 0 0 var(--card-width);
+      height: var(--card-height);
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      background-color: #2f2f2f;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.12);
+      z-index: 20;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .card:hover video {
+      opacity: 1;
+    }
+
+    .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      opacity: 1;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .card-subtitle {
+      font-size: 0.75rem;
+      color: #aaaaaa;
+      margin-top: 2px;
+    }
+
+    /* Boutons du carrousel */
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s, background 0.3s;
+    }
+
+    .carousel-wrapper:hover .nav-btn {
+      opacity: 1;
+    }
+
+    .nav-btn:hover {
+      background: rgba(0,0,0,0.8);
+    }
+
+    .nav-btn.left { left: -4%; }
+    .nav-btn.right { right: -4%; }
+
+    /* Modal lecteur Google Drive */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      width: 85%;
+      max-width: 1100px;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+      z-index: 1010;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .close-btn:hover {
+      color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+
+  <header id="navbar">
+    <div class="logo">ÉPOQUES</div>
+    <nav>
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#s1">Renaissance</a></li>
+        <li><a href="#s2">XVII<sup>e</sup> siècle</a></li>
+        <li><a href="#s3">Siècle des Lumières</a></li>
+        <li><a href="#s4">Révolution industrielle</a></li>
+        <li><a href="#s5">XX<sup>e</sup> siècle</a></li>
+        <li><a href="#s6">Aujourd'hui</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>L'Aventure du Corps</h1>
+      <p>Découvrez la série documentaire retraçant les représentations et régulations du corps humain à travers les époques.</p>
+      <div class="hero-buttons">
+        <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B')">► Lecture</button>
+        <button class="btn-info">ℹ Plus d'infos</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="content-container" id="seasons-container"></main>
+
+  <!-- Lecteur Modal Google Drive -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <iframe id="drivePlayer" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    // Fichier vidéo par défaut de test (ID Google Drive)
+    const testVideoFileId = "1bf1izrxofAyoAsUn7g-QclbvITF_eT6B";
+    const testThumbnailFileId = "1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j";
+
+    // Structure des Saisons & Épisodes
+    const seasons = [
+      {
+        id: "s1",
+        title: "Saison 1 : Renaissance",
+        episodes: [
+          { 
+            id: 1, 
+            title: "L'Aventure du corps (bande-annonce)", 
+            duration: "01:19", 
+            fileId: testVideoFileId, 
+            imageId: testThumbnailFileId 
+          },
+          { 
+            id: 2, 
+            title: "Épisode 2 : L'Humanisme", 
+            duration: "", 
+            fileId: testVideoFileId, 
+            image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600" 
+          },
+          { 
+            id: 3, 
+            title: "Épisode 3 : Les Arts Rénovés", 
+            duration: "", 
+            fileId: testVideoFileId, 
+            image: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?q=80&w=600" 
+          },
+          { 
+            id: 4, 
+            title: "Épisode 4 : Sciences et Découvertes", 
+            duration: "", 
+            fileId: testVideoFileId, 
+            image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600" 
+          }
+        ]
+      },
+      {
+        id: "s2",
+        title: "Saison 2 : XVIIe siècle",
+        episodes: [
+          { id: 1, title: "Épisode 1 : Le Grand Siècle", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600" },
+          { id: 2, title: "Épisode 2 : L'Âge Baroque", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=600" },
+          { id: 3, title: "Épisode 3 : Monarques et Pouvoir", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?q=80&w=600" }
+        ]
+      },
+      {
+        id: "s3",
+        title: "Saison 3 : Siècle des Lumières",
+        episodes: [
+          { id: 1, title: "Épisode 1 : La Raison et l'Esprit", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600" },
+          { id: 2, title: "Épisode 2 : L'Encyclopédie", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=600" }
+        ]
+      },
+      {
+        id: "s4",
+        title: "Saison 4 : Révolution industrielle",
+        episodes: [
+          { id: 1, title: "Épisode 1 : La Vapeur et le Fer", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=600" }
+        ]
+      },
+      {
+        id: "s5",
+        title: "Saison 5 : XXe siècle",
+        episodes: [
+          { id: 1, title: "Épisode 1 : Un Monde de Mutations", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" }
+        ]
+      },
+      {
+        id: "s6",
+        title: "Saison 6 : XXIe siècle",
+        episodes: [
+          { id: 1, title: "Épisode 1 : L'Ère Numérique", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" }
+        ]
+      }
+    ];
+
+    const container = document.getElementById('seasons-container');
+
+    // Fonction utilitaire pour formêter les secondes en texte (ex: "12 min 05 s")
+    function formatDuration(seconds) {
+      if (isNaN(seconds) || seconds <= 0) return "Durée inconnue";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      if (mins === 0) {
+        return `${secs} s`;
+      }
+      return `${mins} min${secs > 0 ? ' ' + secs + ' s' : ''}`;
+    }
+
+    // Génération dynamique de l'interface
+    seasons.forEach((season) => {
+      const row = document.createElement('div');
+      row.className = 'season-row';
+      row.id = season.id;
+
+      const title = document.createElement('h2');
+      title.className = 'season-title';
+      title.textContent = season.title;
+      row.appendChild(title);
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'carousel-wrapper';
+
+      const btnLeft = document.createElement('button');
+      btnLeft.className = 'nav-btn left';
+      btnLeft.innerHTML = '&#10094;';
+      btnLeft.onclick = () => scrollCarousel(carousel, -600);
+
+      const btnRight = document.createElement('button');
+      btnRight.className = 'nav-btn right';
+      btnRight.innerHTML = '&#10095;';
+      btnRight.onclick = () => scrollCarousel(carousel, 600);
+
+      const carousel = document.createElement('div');
+      carousel.className = 'carousel';
+
+      season.episodes.forEach(ep => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => playDriveVideo(ep.fileId);
+
+        // Traitement de l'image (si `imageId` est spécifié, on génère l'URL direct Drive)
+        const img = document.createElement('img');
+        img.src = ep.imageId 
+          ? `https://lh3.googleusercontent.com/d/${ep.imageId}` 
+          : ep.image;
+        img.alt = ep.title;
+
+        // Prévisualisation vidéo au survol
+        const video = document.createElement('video');
+        video.muted = true;
+        video.loop = true;
+        video.preload = "metadata"; // Charge uniquement les métadonnées (dont la durée)
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+        info.innerHTML = `
+          <div class="card-title">${ep.title}</div>
+          <div class="card-subtitle">${ep.duration}</div>
+        `;
+
+        // Récupération automatique de la durée de la vidéo via les métadonnées du flux
+        video.src = `https://drive.google.com/uc?export=download&id=${ep.fileId}`;
+        video.addEventListener('loadedmetadata', () => {
+          const formatted = formatDuration(video.duration);
+          ep.duration = formatted;
+          const subtitleEl = info.querySelector('.card-subtitle');
+          if (subtitleEl) {
+            subtitleEl.textContent = formatted;
+          }
+        });
+
+        card.addEventListener('mouseenter', () => {
+          video.play().catch(() => {});
+        });
+
+        card.addEventListener('mouseleave', () => {
+          video.pause();
+          video.currentTime = 0;
+        });
+
+        card.appendChild(img);
+        card.appendChild(video);
+        card.appendChild(info);
+        carousel.appendChild(card);
+      });
+
+      wrapper.appendChild(btnLeft);
+      wrapper.appendChild(carousel);
+      wrapper.appendChild(btnRight);
+      row.appendChild(wrapper);
+      container.appendChild(row);
+    });
+
+    // Fonction de défilement du carrousel
+    function scrollCarousel(carousel, distance) {
+      carousel.scrollBy({ left: distance, behavior: 'smooth' });
+    }
+
+    // Ouverture de la vidéo dans l'iframe modale Google Drive
+    function playDriveVideo(fileId) {
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('drivePlayer');
+      player.src = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1`;
+      modal.classList.add('active');
+    }
+
+    // Fermeture de la fenêtre modale
+    function closeModal() {
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('drivePlayer');
+      player.src = '';
+      modal.classList.remove('active');
+    }
+
+    // Effet d'arrière-plan sur la barre de navigation
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
