@@ -69,20 +69,65 @@
       color: #b3b3b3;
     }
 
-    /* Hero Banner */
+    /* Hero Banner interactif avec vidéo au survol */
     .hero {
       position: relative;
-      height: 70vh;
-      background: linear-gradient(to top, var(--bg-color) 0%, transparent 60%),
-                  radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%),
-                  url('https://lh3.googleusercontent.com/d/1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j') center/cover no-repeat;
+      height: 52vh;
+      min-height: 380px;
+      background: #141414;
       display: flex;
       align-items: flex-end;
-      padding: 0 4% 50px 4%;
+      padding: 0 4% 30px 4%;
+      margin-top: 98px;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    .hero-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://lh3.googleusercontent.com/d/1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j') center/cover no-repeat;
+      z-index: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      z-index: 2;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .hero:hover .hero-bg-video {
+      opacity: 1;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, var(--bg-color) 0%, transparent 60%),
+                  radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+      z-index: 3;
+      pointer-events: none;
     }
 
     .hero-content {
-      max-width: 600px;
+      position: relative;
+      z-index: 4;
+      max-width: 1200px;
+      width: 100%;
     }
 
     .hero-content h1 {
@@ -97,16 +142,30 @@
       color: #cccccc;
       margin-bottom: 20px;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+      max-width: 800px;
     }
 
-    .hero-buttons button {
-      padding: 10px 24px;
-      font-size: 1rem;
+    /* Conteneur des boutons aligné sur une seule ligne sans scrollbar */
+    .hero-buttons {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 10px;
+      overflow: visible;
+    }
+
+    .hero-buttons button,
+    .hero-buttons a.btn-link {
+      padding: 9px 18px;
+      font-size: 0.95rem;
       font-weight: bold;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      margin-right: 12px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
       transition: opacity 0.2s;
     }
 
@@ -120,14 +179,21 @@
       color: #ffffff;
     }
 
-    .hero-buttons button:hover {
+    .btn-thesis,
+    .btn-amazon {
+      background-color: rgba(109, 109, 110, 0.7);
+      color: #ffffff;
+    }
+
+    .hero-buttons button:hover,
+    .hero-buttons a.btn-link:hover {
       opacity: 0.8;
     }
 
     /* Rangees de Saisons */
     .content-container {
       padding: 20px 0 60px 0;
-      margin-top: -50px;
+      margin-top: -20px;
       position: relative;
       z-index: 10;
     }
@@ -142,6 +208,46 @@
       font-weight: 600;
       margin-bottom: 12px;
       color: #e5e5e5;
+    }
+
+    /* Style du badge "Nouveaux épisodes" */
+    .badge-new-episodes {
+      display: inline-flex;
+      align-items: center;
+      background-color: #e50914;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-left: 12px;
+      vertical-align: middle;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .badge-new-episodes:hover {
+      background-color: #f40612;
+      transform: scale(1.05);
+      color: #ffffff;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { transform: scale(0.95); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+      100% { transform: scale(0.95); opacity: 1; }
     }
 
     /* Carrousel */
@@ -179,6 +285,14 @@
       transform: scale(1.12);
       z-index: 20;
       box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    }
+
+    /* Classe pour maintenir le focus permanent sur la carte ciblée */
+    .card.highlight-card {
+      transform: scale(1.12);
+      z-index: 20;
+      box-shadow: 0 0 20px rgba(229, 9, 20, 0.7);
+      border: 2px solid var(--accent-color);
     }
 
     .card img {
@@ -281,7 +395,7 @@
       box-shadow: 0 15px 40px rgba(0,0,0,0.9);
       display: flex;
       flex-direction: row;
-      align-items: stretch; /* Aligne la hauteur des blocs de manière identique */
+      align-items: stretch;
     }
 
     @media (max-width: 992px) {
@@ -314,13 +428,10 @@
       flex-direction: column;
       background: #181818;
       border-left: 1px solid #2a2a2a;
-      
-      /* Hauteur maximale bloquée sur celle de la vidéo pour activer le scroll si le texte dépasse */
       max-height: 100%;
       overflow-y: auto; 
     }
 
-    /* Personnalisation de la barre de défilement */
     .modal-text-container::-webkit-scrollbar {
       width: 6px;
     }
@@ -352,6 +463,15 @@
       line-height: 1.5;
       color: #d1d1d1;
       text-align: justify;
+    }
+
+    .modal-text-container p a {
+      color: #ff6b6b;
+      text-decoration: underline;
+    }
+
+    .modal-text-container p a:hover {
+      color: #ff9999;
     }
 
     /* Modal "Plus d'infos" spécifique */
@@ -437,13 +557,18 @@
     </nav>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="heroBanner">
+    <div class="hero-bg-image"></div>
+    <video class="hero-bg-video" id="heroVideo" muted loop preload="metadata" src="https://drive.google.com/uc?export=download&id=1bf1izrxofAyoAsUn7g-QclbvITF_eT6B"></video>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1>L'Aventure du Corps</h1>
-      <p>Découvrez la série documentaire retraçant les représentations et régulations du corps humain à travers les époques.</p>
+      <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’IA devient un outil au service de la vulgarisation scientifique.</p>
       <div class="hero-buttons">
         <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Lecture</button>
-        <button class="btn-info" onclick="openInfoModal()">ℹ Plus d'infos</button>
+        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis">📖 Thèse de doctorat de Pierre Fraser</a>
+        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Le corps idéal</a>
+        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Le corps augmenté</a>
       </div>
     </div>
   </section>
@@ -473,7 +598,7 @@
         L'aventure du corps humain se dévoile à travers une exploration saisissante des représentations et des régulations corporelles au fil des siècles. De la Renaissance à notre époque contemporaine, cette série documentaire interroge les normes, les contraintes et les métamorphoses d'une anatomie sans cesse redéfinie par la culture et le pouvoir. En scrutant les marges de l'intime et les carcans sociaux, chaque épisode dissèque la manière dont la chair devient le réceptacle des idéaux collectifs. Une plongée rigoureuse et nécessaire au cœur de notre condition charnelle, invitant à repenser les frontières invisibles qui façonnent notre identité physique d'hier à aujourd'hui.
       </p>
       <div class="info-highlight">
-        Cette série documentaire a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tirée de la <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer">thèse de doctorat (2015) de Pierre Fraser</a>. Ici, l’IA devient un outil au service de la vulgarisation scientifique.
+        Cette série documentaire a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer">thèse de doctorat (2015) de Pierre Fraser</a>. Ici, l’IA devient un outil au service de la vulgarisation scientifique.
       </div>
     </div>
   </div>
@@ -482,7 +607,7 @@
     const testVideoFileId = "1bf1izrxofAyoAsUn7g-QclbvITF_eT6B";
     const testThumbnailFileId = "1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j";
 
-    const defaultThesisSynopsis = "L'aventure du corps humain se dévoile à travers une exploration saisissante des représentations et des régulations corporelles au fil des siècles. De la Renaissance à notre époque contemporaine, cette série documentaire interroge les normes, les contraintes et les métamorphoses d'une anatomie sans cesse redéfinie par la culture et le pouvoir. En scrutant les marges de l'intime et les carcans sociaux, chaque épisode dissèque la manière dont la chair devient le réceptacle des idéaux collectifs. Une plongée rigoureuse et nécessaire au cœur de notre condition charnelle, invitant à repenser les frontières invisibles qui façonnent notre identité physique d'hier à aujourd'hui.<br/><br/>Texte original";
+    const defaultThesisSynopsis = "L'aventure du corps humain se dévoile à travers une exploration saisissante des représentations et des régulations corporelles au fil des siècles. De la Renaissance à notre époque contemporaine, cette série documentaire interroge les normes, les contraintes et les métamorphoses d'une anatomie sans cesse redéfinie par la culture et le pouvoir. En scrutant les marges de l'intime et les carcans sociaux, chaque épisode dissèque la manière dont la chair devient le réceptacle des idéaux collectifs. Une plongée rigoureuse et nécessaire au cœur de notre condition charnelle, invitant à repenser les frontières invisibles qui façonnent notre identité physique d'hier à aujourd'hui.";
 
     const seasons = [
       {
@@ -499,31 +624,73 @@
           },
           { 
             id: 2, 
-            title: "Épisode 2 : L'Humanisme", 
-            duration: "", 
-            fileId: testVideoFileId, 
-            image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600",
-            synopsis: "Exploration de l'humanisme renaissant et de la redécouverte de l'anatomie classique à travers le prisme de la culture et des structures de pouvoir de l'époque."
+            title: "La quête sans fin du corps idéal", 
+            duration: "03:01", 
+            fileId: "17G6wuC30ehVZInCTwM9X7Ye9v5_ZkKj8", 
+            imageId: "1vrQ1YyGwTnDlL8d0iDg-R-LuaRIpCpEm",
+            synopsis: "La quête du corps idéal est un chantier perpétuel hérité de la Renaissance. Sous l'impulsion du peintre Alberti, du médecin Vésale et de l'éducateur Mercurialis, le corps est passé d'une création divine intouchable à une mécanique mesurable, réparable et modifiable. Aujourd'hui, cette démarche dépasse le simple choix individuel pour devenir une véritable injonction sociale et morale orchestrée par la médecine et les médias. En croyant façonner notre identité profonde, nous soumettons notre enveloppe à une vaste entreprise de conformité, posant la question du devenir de notre identité face aux technologies futures."
           },
           { 
             id: 3, 
-            title: "Épisode 3 : Les Arts Rénovés", 
-            duration: "", 
-            fileId: testVideoFileId, 
-            image: "https://images.unsplash.com/photo-1582560475093-ba66accbc424?q=80&w=600" 
+            title: "Qui a décidé ce qu'était un corps idéal ?", 
+            duration: "03:38", 
+            fileId: "1O4yFB9PAvAOBtINsw0hJjRo_E4XF7AA-", 
+            imageId: "1ASKoWbuGsmPRIXwU1dHndhAQUiyeTWfg",
+            synopsis: "L’obsession contemporaine pour le fitness prend sa source à la Renaissance italienne. Dès 1432, le peintre Leon Battista Alberti affirme que l’exercice physique conserve la santé, la jeunesse et la beauté. En théorisant les « justes proportions » du corps, il transforme la maîtrise physique en un signe de vertu morale et de distinction sociale."
           },
           { 
             id: 4, 
-            title: "Épisode 4 : Sciences et Découvertes", 
-            duration: "", 
-            fileId: testVideoFileId, 
-            image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600" 
-          }
+            title: "Qu'est-ce qu'un corps en santé ?", 
+            duration: "04:52", 
+            fileId: "1QveU67l_HQr2o8E3ZQkozShXckbA8a5f", 
+            imageId: "1Ee4EZJblMOyUuSTNhv-ZOqZMFoV-1Czb",
+            synopsis: "À la Renaissance, le corps humain est pensé comme un microcosme  : un miroir de l'univers traversé par l'empreinte des astres  et l'équilibre des quatre éléments . Dans cette vision mi-animiste, mi-chrétienne , ce frêle « sac d'os »  subit la maladie non comme une panne mécanique, mais comme un déséquilibre cosmique ou moral. Restaurer la santé exige la médiation de la nature — plantes, boues et métaux  — pour réaligner la matière humaine avec le monde. Loin de notre médecine moderne compartimentée, la santé était l'art de maintenir une harmonie absolue entre la terre et le ciel."
+          },
+          { 
+            id: 5, 
+            title: "Un corps robuste et résistant", 
+            duration: "04:26", 
+            fileId: "1x_Lzo4GqoK-y2eNksJamAOGlPlHSuNl_", 
+            imageId: "1g6pJflaYVXDUSf2AbctZObjdovLXXcsW",
+            synopsis: "Cette vidéo transporte l’analyse de la condition physique au cœur de la Renaissance, une période charnière où l’humanisme redéfinit la place du corps. L’art et la science de cette époque prônent l’harmonie entre l’esprit et la matière, réhabilitant l’exercice physique, l’hygiène de vie et la robustesse anatomique comme fondements indispensables de l’épanouissement humain."
+          },
+          { 
+            id: 6, 
+            title: "Exercice ou médicaments ?", 
+            duration: "04:00", 
+            fileId: "1RdeVhwhUw2Ktp0Ex6VcmqBMv41nrWkia", 
+            imageId: "1zGfwMLi-TzWAXh1MAkQg08w8dthYgQam",
+            synopsis: "Loin d'être une innovation moderne, le sport sur ordonnance remonte au XVIᵉ siècle. Avec l'avènement de l'humanisme, la médecine abandonne la vision fataliste du corps pour le concevoir comme une mécanique à ajuster préventivement par le mouvement. Des médecins comme Laurence Joubert et Mercurialis (De Arte Gymnastica, 1569) répertorient les exercices, prônant l'exercice plutôt que le médicament. Mercurialis distingue nettement la gymnastique médicale de la recherche de performance militaire. Concevant le corps comme un organisme en devenir constant, ces savants ont posé les bases de la prévention santé moderne par l'activité physique."
+          },
+          { 
+            id: 7, 
+            title: "Obésité ou manque de volonté ?", 
+            duration: "03:00", 
+            fileId: "1S9sokGbXj9cyMOBRoy4EVCzHH6d9k1nB", 
+            imageId: "1psPN0oFov60FZeSprfZYwEJjYfVjTXaX",
+            synopsis: "Le rejet actuel de l'obésité et l'association du surpoids à un manque de volonté ne relèvent pas d'une science moderne neutre, mais trouvent leurs racines au XVIe siècle. À cette époque, le médecin Laurent Joubert a posé les bases d'un discours moralisateur liant l'activité physique à la santé, qualifiant péjorativement la graisse superflue. Cette vision a rapidement fusionné avec la physionomie, une pseudoscience qui associait l'embonpoint à des vices moraux comme la gourmandise et la luxure. Enfin, des artistes comme Andrea Mantegna ont ancré ces préjugés dans la culture visuelle en représentant les corps obèses de manière grotesque et déshumanisée. En somme, notre perception contemporaine du poids est une construction culturelle ancienne plutôt qu'une vérité biologique pure."
+          },
+          { 
+            id: 8, 
+            title: "Prôner la retenue alimentaire", 
+            duration: "04:45", 
+            fileId: "1uEFgVqaAJRb9NRRmGw8jVcnX_YsYFs9e", 
+            imageId: "118YTv2K-EKvHBZ1dN9FW2INZaDXxvONF",
+            synopsis: "À la Renaissance, l'étude de la corpulence émerge à travers la convergence de l'art, des mathématiques et de la médecine. Le peintre Albrecht Dürer tente en vain d'appliquer le cercle de Vitruve pour analyser mathématiquement l'obésité, illustrant ainsi l'impossibilité de systématiser ce corps rebelle aux cadres géométriques. Face aux excès de l'élite aristocratique souffrant de goutte et d'apoplexie, les médecins prescrivent des régimes d'assèchement et de sobriété, bannissant paradoxalement les fruits et les légumes frais pour lutter contre l'humidité corporelle. Cette gestion de l'alimentation traduit une nette fracture sociale, s'opposant à la maigreur tragique du peuple associée aux famines et aux pestes. Finalement, ces tentatives anciennes de discipliner la morphologie révèlent une volonté profonde de moraliser la démesure physique et d'instaurer un idéal corporel lié au statut social."
+          },
+          { 
+            id: 9, 
+            title: "Le corps glorifié", 
+            duration: "03:31", 
+            fileId: "1-w1qwbOfYhEIa0lItcLSBvXil_D3InU4", 
+            imageId: "1Oxvr0S4BLP1fcvoAQUQfJTtiFEsYbxqY",
+            synopsis: "L'art de la Renaissance a transformé le corps humain en un véritable culte esthétique et philosophique. En s'inspirant de modèles antiques comme le Torse du Belvédère, des maîtres tels que Michel-Ange et Raphaël ont glorifié une anatomie ultra-musclée, reléguant la nature au second plan. Pour réussir cette illusion de volume tridimensionnel, les peintres ont dû maîtriser l'architecture interne des muscles et de la lumière. Cette quête a atteint son apogée avec l'Homme de Vitruve de Léonard de Vinci, qui symbolise l'humanisme en plaçant l'homme au centre de l'univers et comme mesure de toute chose. Enfin, les textes comparent cette obsession historique de la perfection physique aux algorithmes modernes, suggérant que notre quête actuelle d'idéal corporel a perdu sa dimension cosmique."
+          },
         ]
       },
       {
         id: "s2",
-        title: "XVIIe siècle",
+        title: "Grand siècle",
         episodes: [
           { id: 1, title: "Épisode 1 : Le Grand Siècle", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600" },
           { id: 2, title: "Épisode 2 : L'Âge Baroque", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=600" },
@@ -547,14 +714,14 @@
       },
       {
         id: "s5",
-        title: "XXe siècle",
+        title: "Modernité",
         episodes: [
           { id: 1, title: "Épisode 1 : Un Monde de Mutations", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" }
         ]
       },
       {
         id: "s6",
-        title: "XXIe siècle",
+        title: "Aujourd'hui",
         episodes: [
           { id: 1, title: "Épisode 1 : L'Ère Numérique", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" }
         ]
@@ -580,7 +747,14 @@
 
       const title = document.createElement('h2');
       title.className = 'season-title';
-      title.textContent = season.title;
+
+      // Insertion du badge Netflix pour la section Renaissance (id: s1)
+      if (season.id === 's1') {
+        title.innerHTML = `${season.title} <a href="#ep-s1-6" class="badge-new-episodes"><span class="badge-dot"></span>Nouveaux épisodes</a>`;
+      } else {
+        title.textContent = season.title;
+      }
+
       row.appendChild(title);
 
       const wrapper = document.createElement('div');
@@ -602,7 +776,19 @@
       season.episodes.forEach(ep => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.onclick = () => playDriveVideo(ep.fileId, ep.title, ep.synopsis);
+
+        // Attribution d'un ID unique à l'épisode 6 de la section Renaissance
+        if (season.id === 's1' && ep.id === 6) {
+          card.id = 'ep-s1-6';
+          // Optionnel : ajouter la classe de mise en valeur permanente dès le chargement initial
+          card.classList.add('highlight-card');
+        }
+
+        card.onclick = () => {
+          // Si l'utilisateur clique sur une autre carte, on peut optionnellement retirer le focus persistant
+          document.querySelectorAll('.card.highlight-card').forEach(c => c.classList.remove('highlight-card'));
+          playDriveVideo(ep.fileId, ep.title, ep.synopsis);
+        };
 
         const img = document.createElement('img');
         img.src = ep.imageId 
@@ -654,9 +840,44 @@
       container.appendChild(row);
     });
 
+    // Gestion du survol pour la bannière Hero
+    const heroBanner = document.getElementById('heroBanner');
+    const heroVideo = document.getElementById('heroVideo');
+
+    heroBanner.addEventListener('mouseenter', () => {
+      heroVideo.play().catch(() => {});
+    });
+
+    heroBanner.addEventListener('mouseleave', () => {
+      heroVideo.pause();
+      heroVideo.currentTime = 0;
+    });
+
     function scrollCarousel(carousel, distance) {
       carousel.scrollBy({ left: distance, behavior: 'smooth' });
     }
+
+    // Gestion du clic sur le badge "Nouveaux épisodes" pour faire défiler et maintenir le focus
+    document.addEventListener('click', function(e) {
+      const target = e.target.closest('.badge-new-episodes');
+      if (target) {
+        e.preventDefault();
+        const targetCard = document.getElementById('ep-s1-6');
+        if (targetCard) {
+          const carousel = targetCard.closest('.carousel');
+          if (carousel) {
+            const scrollLeftPos = targetCard.offsetLeft - carousel.offsetLeft;
+            carousel.scrollTo({
+              left: scrollLeftPos,
+              behavior: 'smooth'
+            });
+
+            // S'assure que la classe de mise en valeur reste active sur la carte ciblée
+            targetCard.classList.add('highlight-card');
+          }
+        }
+      }
+    });
 
     function playDriveVideo(fileId, episodeTitle, episodeSynopsis) {
       const modal = document.getElementById('videoModal');
