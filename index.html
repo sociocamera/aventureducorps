@@ -201,53 +201,27 @@
     .season-row {
       margin-bottom: 40px;
       padding: 0 4%;
+      scroll-margin-top: 90px;
+    }
+
+    .season-header {
+      display: flex;
+      align-items: baseline;
+      gap: 15px;
+      margin-bottom: 12px;
     }
 
     .season-title {
       font-size: 1.4rem;
       font-weight: 600;
-      margin-bottom: 12px;
       color: #e5e5e5;
     }
 
-    /* Style du badge "Nouveaux épisodes" */
-    .badge-new-episodes {
-      display: inline-flex;
-      align-items: center;
-      background-color: #e50914;
-      color: #ffffff;
-      font-size: 0.75rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 2px;
-      margin-left: 12px;
-      vertical-align: middle;
-      text-decoration: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      transition: background-color 0.2s, transform 0.2s;
-      cursor: pointer;
-    }
-
-    .badge-new-episodes:hover {
-      background-color: #f40612;
-      transform: scale(1.05);
-      color: #ffffff;
-    }
-
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      background-color: #ffffff;
-      border-radius: 50%;
-      margin-right: 6px;
-      animation: pulse-dot 1.5s infinite;
-    }
-
-    @keyframes pulse-dot {
-      0% { transform: scale(0.95); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
-      100% { transform: scale(0.95); opacity: 1; }
+    .season-notice {
+      font-size: 0.85rem;
+      color: #888888;
+      font-style: italic;
+      font-weight: normal;
     }
 
     /* Carrousel */
@@ -285,14 +259,6 @@
       transform: scale(1.12);
       z-index: 20;
       box-shadow: 0 8px 20px rgba(0,0,0,0.8);
-    }
-
-    /* Classe pour maintenir le focus permanent sur la carte ciblée */
-    .card.highlight-card {
-      transform: scale(1.12);
-      z-index: 20;
-      box-shadow: 0 0 20px rgba(229, 9, 20, 0.7);
-      border: 2px solid var(--accent-color);
     }
 
     .card img {
@@ -474,56 +440,6 @@
       color: #ff9999;
     }
 
-    /* Modal "Plus d'infos" spécifique */
-    .info-modal-content {
-      position: relative;
-      width: 90%;
-      max-width: 750px;
-      background: #181818;
-      border-radius: 8px;
-      padding: 40px 35px 35px 35px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-      border: 1px solid #333;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-
-    .info-modal-content h2 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #ffffff;
-      border-bottom: 2px solid var(--accent-color);
-      padding-bottom: 10px;
-      display: inline-block;
-    }
-
-    .info-text-block {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: #d1d1d1;
-      margin-bottom: 20px;
-      text-align: justify;
-    }
-
-    .info-highlight {
-      background: rgba(229, 9, 20, 0.1);
-      border-left: 4px solid var(--accent-color);
-      padding: 15px 20px;
-      border-radius: 0 4px 4px 0;
-      color: #e5e5e5;
-      font-style: italic;
-    }
-
-    .info-highlight a {
-      color: #ff6b6b;
-      text-decoration: underline;
-      font-weight: 500;
-    }
-
-    .info-highlight a:hover {
-      color: #ff9999;
-    }
-
     .close-btn {
       position: absolute;
       top: 15px;
@@ -585,20 +501,6 @@
       <div class="modal-text-container" id="modalTextContainer">
         <h3 id="modalEpisodeTitle">Extrait de la thèse</h3>
         <p id="modalEpisodeText">Chargement de l'extrait...</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal "Plus d'infos" -->
-  <div class="modal" id="infoModal">
-    <div class="info-modal-content">
-      <span class="close-btn" onclick="closeInfoModal()">&times;</span>
-      <h2>À propos de la série</h2>
-      <p class="info-text-block">
-        L'aventure du corps humain se dévoile à travers une exploration saisissante des représentations et des régulations corporelles au fil des siècles. De la Renaissance à notre époque contemporaine, cette série documentaire interroge les normes, les contraintes et les métamorphoses d'une anatomie sans cesse redéfinie par la culture et le pouvoir. En scrutant les marges de l'intime et les carcans sociaux, chaque épisode dissèque la manière dont la chair devient le réceptacle des idéaux collectifs. Une plongée rigoureuse et nécessaire au cœur de notre condition charnelle, invitant à repenser les frontières invisibles qui façonnent notre identité physique d'hier à aujourd'hui.
-      </p>
-      <div class="info-highlight">
-        Cette série documentaire a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer">thèse de doctorat (2015) de Pierre Fraser</a>. Ici, l’IA devient un outil au service de la vulgarisation scientifique.
       </div>
     </div>
   </div>
@@ -686,44 +588,88 @@
             imageId: "1Oxvr0S4BLP1fcvoAQUQfJTtiFEsYbxqY",
             synopsis: "L'art de la Renaissance a transformé le corps humain en un véritable culte esthétique et philosophique. En s'inspirant de modèles antiques comme le Torse du Belvédère, des maîtres tels que Michel-Ange et Raphaël ont glorifié une anatomie ultra-musclée, reléguant la nature au second plan. Pour réussir cette illusion de volume tridimensionnel, les peintres ont dû maîtriser l'architecture interne des muscles et de la lumière. Cette quête a atteint son apogée avec l'Homme de Vitruve de Léonard de Vinci, qui symbolise l'humanisme en plaçant l'homme au centre de l'univers et comme mesure de toute chose. Enfin, les textes comparent cette obsession historique de la perfection physique aux algorithmes modernes, suggérant que notre quête actuelle d'idéal corporel a perdu sa dimension cosmique."
           },
+          { 
+            id: 10, 
+            title: "Le corps et son statut social", 
+            duration: "03:16", 
+            fileId: "1eN03knS2dH7L2NUPGxDv19h9vNcQTaTX", 
+            imageId: "1YRAKTPfOaaRhODTqHe9lF2886t-gsNKy",
+            synopsis: "La Renaissance a profondément transformé la perception et la représentation du corps, ancrant les bases de nos diktats esthétiques modernes. À cette époque, la corpulence pouvait symboliser l'autorité et la richesse pour les classes dominantes, tandis que les progrès de la médecine anatomique ont révélé la chair comme une machine complexe que l'on pouvait enfin comprendre et modifier. Cet idéal du corps façonnable a rapidement creusé une fracture inégalitaire entre les genres, associant la puissance masculine à l'expansion musculaire et la valeur féminine à une stricte minceur. Finalement, ces dynamiques historiques démontrent que nos obsessions contemporaines pour le fitness, les régimes et la perfection physique ne sont que les lointains héritiers de mutations sociologiques vieilles de cinq siècles."
+          },
         ]
       },
       {
         id: "s2",
         title: "Grand siècle",
+        notice: "En développement...",
         episodes: [
-          { id: 1, title: "Épisode 1 : Le Grand Siècle", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600" },
-          { id: 2, title: "Épisode 2 : L'Âge Baroque", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=600" },
-          { id: 3, title: "Épisode 3 : Monarques et Pouvoir", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?q=80&w=600" }
+          { 
+            id: 1, 
+            title: "Bande-annonce", 
+            duration: "00:22", 
+            fileId: "1Whkqwb1tKX-VvFtYUj_2Vk7bZCOS2DW8", 
+            imageId: "1KnS2v3TPB17Zw2g1iwJGFPgOCxoSWAGR",
+            synopsis: "En développement (disponible novembre 2026) <br/><br/>Durant le XVIIe siècle, une rupture ontologique a transformé la perception du corps humain, passant d'une connexion cosmique à une vision purement mécaniste et réductionniste. Cette transformation s'est concrétisée notamment grâce à la découverte de la circulation sanguine par William Harvey, qui a assimilé le corps à un agencement de pompes et de leviers. Parallèlement, l'éthique protestante a redéfini le rôle de la chair, imposant un corps laborieux voué au travail constant et à la maîtrise de soi pour prouver sa valeur divine. En combinant cette vision mécanique et cette morale rigoriste, cette époque a ainsi posé les fondements historiques de notre culte moderne de la productivité et de l'optimisation permanente."
+          },
         ]
       },
       {
         id: "s3",
         title: "Siècle des Lumières",
+        notice: "Novembre 2026...",
         episodes: [
-          { id: 1, title: "Épisode 1 : La Raison et l'Esprit", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600" },
-          { id: 2, title: "Épisode 2 : L'Encyclopédie", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=600" }
+          { 
+            id: 1, 
+            title: "Bande-annonce", 
+            duration: "00:23", 
+            fileId: "136a4lm9Vlal0-e5ZSoJi9WJ-MQprB7XZ", 
+            imageId: "1CuVeSvyg7XbWzHVpjWEyAiBpmbvPUuru",
+            synopsis: "En développement (disponible décembre 2026) <br/><br/>Ce dans quoi le Siècle des Lumières engage le corps, c’est dans un double mouvement : soumission et libération. Soumission, dans le sens où « tout se passe ici comme si le peuple allait chez le savant comme chez le devin et le magicien, qui sait ce qu’il en est des choses surnaturelles ; en effet, l’ignorant se fait du savant dont il espère quelque chose des représentations volontiers excessives1. » Soumission, dans le sens où l’individu consulte son médecin pour décider à sa place de son régime, plutôt que d’en décider lui-même en se donnant la peine de consulter son propre entendement. Soumission, dans le sens où l’individu recherche la santé pour accéder au bonheur en attendant des médecins les moyens d’y parvenir. Libération, dans le sens où le développement, l’entretien, l’alimentation et le soin du corps doivent dépendre totalement et intégralement de la volonté de l’individu et de son entendement."
+          },
         ]
       },
       {
         id: "s4",
         title: "Révolution industrielle",
+        notice: "Décembre 2026...",
         episodes: [
-          { id: 1, title: "Épisode 1 : La Vapeur et le Fer", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=600" }
+          { 
+            id: 1, 
+            title: "Bande-annonce", 
+            duration: "00:23", 
+            fileId: "1npzN07I8vK3sYil88TvInSQnyFT1C1go", 
+            imageId: "168Hh6pEUEpSLMZ9jaPCuquRsF4h6_Tgu",
+            synopsis: "En développement (disponible décembre 2026) <br/><br/>Durant le XVIIe siècle, une rupture ontologique a transformé la perception du corps humain, passant d'une connexion cosmique à une vision purement mécaniste et réductionniste. Cette transformation s'est concrétisée notamment grâce à la découverte de la circulation sanguine par William Harvey, qui a assimilé le corps à un agencement de pompes et de leviers. Parallèlement, l'éthique protestante a redéfini le rôle de la chair, imposant un corps laborieux voué au travail constant et à la maîtrise de soi pour prouver sa valeur divine. En combinant cette vision mécanique et cette morale rigoriste, cette époque a ainsi posé les fondements historiques de notre culte moderne de la productivité et de l'optimisation permanente."
+          }
         ]
       },
       {
         id: "s5",
         title: "Modernité",
+        duration: "00:23", 
+        notice: "Janvier 2027...",
         episodes: [
-          { id: 1, title: "Épisode 1 : Un Monde de Mutations", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600" }
+          { 
+            title: "Bande-annonce",
+            duration: "00:23", 
+            fileId: "1dPD_knop4Ig1eFhyYzC1s4MCFN1BpQLd", 
+            imageId: "18OKvo7nCszrEIMckzPLJc6D75uLGH6s5",
+            synopsis: "En développement (disponible janvier 2027) <br/><br/>Au XXe siècle, le corps subit une mutation radicale, passant d'un simple instrument de production à un objet de consommation, d'exhibition et de surveillance biopolitique. Foucault démontre comment les institutions disciplinaires quadrillent l'enveloppe charnelle pour en maximiser la docilité et l'utilité économique. Parallèlement, l'émancipation des mœurs, les conquêtes féministes et l'explosion des industries culturelles redéfinissent la corporéité comme le lieu souverain de l'identité, de la jouissance et de l'expression individuelle. Pourtant, cette apparente libération s'accompagne d'une normativité accrue, dictée par l'hygiénisme, la tyrannie de la jeunesse éternelle et l'obsession de la forme physique, transformant le corps en un capital symbolique hautement concurrentiel."
+          }
         ]
       },
       {
         id: "s6",
         title: "Aujourd'hui",
+        notice: "Février 2027...",
         episodes: [
-          { id: 1, title: "Épisode 1 : L'Ère Numérique", duration: "", fileId: testVideoFileId, image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600" }
+          { 
+            title: "Bande-annonce",
+            duration: "00:23", 
+            fileId: "1vojGQwfUQ3owQttzv7sbuOchq3K6xyur", 
+            imageId: "19CKpIS7vgp3fdx3rq8u5GQbSnfAX0poQ",
+            synopsis: "En développement (disponible février 2027) <br/><br/>Aujourd'hui, la représentation du corps se fragmente dans l'hyperconnectivité numérique, oscillant entre l'injonction performative à l'optimisation biométrique et la quête radicale d'inclusivité transgressive. Le corps n'est plus seulement un capital social ou un objet disciplinaire, il devient une interface fluide, sans cesse mise en scène, filtrée et réévaluée à l'ère des réseaux sociaux. Cette mutation comme dpit être vue comme une intériorisation de la contrainte où le sujet performant s'exploite lui-même au nom de la liberté corporelle, de la santé connectée et de la jeunesse perpétuelle. Néanmoins, l'émergence des luttes intersectionnelles et queer subvertit ces normes hégémoniques en célébrant les corps dissidents, hybrides et vulnérables face aux algorithmes de la visibilité."
+          }
         ]
       }
     ];
@@ -745,17 +691,22 @@
       row.className = 'season-row';
       row.id = season.id;
 
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'season-header';
+
       const title = document.createElement('h2');
       title.className = 'season-title';
+      title.textContent = season.title;
+      headerDiv.appendChild(title);
 
-      // Insertion du badge Netflix pour la section Renaissance (id: s1)
-      if (season.id === 's1') {
-        title.innerHTML = `${season.title} <a href="#ep-s1-6" class="badge-new-episodes"><span class="badge-dot"></span>Nouveaux épisodes</a>`;
-      } else {
-        title.textContent = season.title;
+      if (season.notice) {
+        const notice = document.createElement('span');
+        notice.className = 'season-notice';
+        notice.textContent = season.notice;
+        headerDiv.appendChild(notice);
       }
 
-      row.appendChild(title);
+      row.appendChild(headerDiv);
 
       const wrapper = document.createElement('div');
       wrapper.className = 'carousel-wrapper';
@@ -777,15 +728,7 @@
         const card = document.createElement('div');
         card.className = 'card';
 
-        // Attribution d'un ID unique à l'épisode 6 de la section Renaissance
-        if (season.id === 's1' && ep.id === 6) {
-          card.id = 'ep-s1-6';
-          // Optionnel : ajouter la classe de mise en valeur permanente dès le chargement initial
-          card.classList.add('highlight-card');
-        }
-
         card.onclick = () => {
-          // Si l'utilisateur clique sur une autre carte, on peut optionnellement retirer le focus persistant
           document.querySelectorAll('.card.highlight-card').forEach(c => c.classList.remove('highlight-card'));
           playDriveVideo(ep.fileId, ep.title, ep.synopsis);
         };
@@ -857,28 +800,6 @@
       carousel.scrollBy({ left: distance, behavior: 'smooth' });
     }
 
-    // Gestion du clic sur le badge "Nouveaux épisodes" pour faire défiler et maintenir le focus
-    document.addEventListener('click', function(e) {
-      const target = e.target.closest('.badge-new-episodes');
-      if (target) {
-        e.preventDefault();
-        const targetCard = document.getElementById('ep-s1-6');
-        if (targetCard) {
-          const carousel = targetCard.closest('.carousel');
-          if (carousel) {
-            const scrollLeftPos = targetCard.offsetLeft - carousel.offsetLeft;
-            carousel.scrollTo({
-              left: scrollLeftPos,
-              behavior: 'smooth'
-            });
-
-            // S'assure que la classe de mise en valeur reste active sur la carte ciblée
-            targetCard.classList.add('highlight-card');
-          }
-        }
-      }
-    });
-
     function playDriveVideo(fileId, episodeTitle, episodeSynopsis) {
       const modal = document.getElementById('videoModal');
       const player = document.getElementById('drivePlayer');
@@ -901,25 +822,10 @@
       modal.classList.remove('active');
     }
 
-    function openInfoModal() {
-      const modal = document.getElementById('infoModal');
-      modal.scrollTop = 0;
-      modal.classList.add('active');
-    }
-
-    function closeInfoModal() {
-      const modal = document.getElementById('infoModal');
-      modal.classList.remove('active');
-    }
-
     window.onclick = function(event) {
       const videoModal = document.getElementById('videoModal');
-      const infoModal = document.getElementById('infoModal');
       if (event.target === videoModal) {
         closeModal();
-      }
-      if (event.target === infoModal) {
-        closeInfoModal();
       }
     }
 
