@@ -211,19 +211,64 @@
       border-color: var(--accent-hover);
     }
 
-    .btn-info,
-    .btn-thesis,
-    .btn-amazon {
-      background-color: var(--surface-color);
+    /* Bouton "Plus d'infos" sur fond grisé */
+    .btn-info {
+      background-color: #e8e5dc;
       color: var(--text-main);
-      border-color: var(--border-color);
+      border-color: #d6d1c4;
       box-shadow: var(--shadow-subtle);
+    }
+
+    .btn-info:hover {
+      background-color: #ded9cc;
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+
+    /* Bouton Thèse de doctorat (fond chêne / sable doux) */
+    .btn-thesis {
+      background-color: #ece6d8;
+      color: #3b3530;
+      border-color: #d6ccb8;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .btn-thesis:hover {
+      background-color: #e2d8c4;
+      border-color: #bfae96;
+      color: #2c2a29;
+    }
+
+    /* Premier bouton Amazon : Le corps idéal (fond vert-de-gris subtil) */
+    .btn-amazon-ideal {
+      background-color: #e0e5e1;
+      color: #2d3830;
+      border-color: #cfd8d0;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .btn-amazon-ideal:hover {
+      background-color: #d1dcd3;
+      border-color: #abc0b3;
+      color: #1f2721;
+    }
+
+    /* Second bouton Amazon : Le corps augmenté (fond ocre / terre cuite claire) */
+    .btn-amazon-augmented {
+      background-color: #f2e6e1;
+      color: #4a2c22;
+      border-color: #e2cfc7;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .btn-amazon-augmented:hover {
+      background-color: #ebd7ce;
+      border-color: #c9a697;
+      color: #382018;
     }
 
     .hero-buttons button:hover,
     .hero-buttons a.btn-link:hover {
-      border-color: var(--accent-color);
-      color: var(--accent-color);
       transform: translateY(-1px);
     }
 
@@ -514,6 +559,17 @@
     .close-btn:hover {
       color: var(--accent-color);
     }
+
+    /* Style spécifique pour la modale textuelle "Plus d'infos" (sans lecteur vidéo) */
+    .modal-content.info-only {
+      max-width: 700px;
+      flex-direction: column;
+    }
+
+    .modal-content.info-only .modal-text-container {
+      border-left: none;
+      max-height: 80vh;
+    }
   </style>
 </head>
 <body>
@@ -542,9 +598,10 @@
       <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’intelligence artificielle devient un instrument rigoureux au service de la vulgarisation scientifique et de l'épistémologie corporelle.</p>
       <div class="hero-buttons">
         <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Visionner l'introduction</button>
+        <button class="btn-info" onclick="openInfoModal()">ℹ️ Plus d'infos</button>
         <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis">📖 Thèse de doctorat (2015) — P. Fraser</a>
-        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Monographie : Le corps idéal</a>
-        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Monographie : Le corps augmenté</a>
+        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-ideal">🛒 Monographie : Le corps idéal</a>
+        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-augmented">🛒 Monographie : Le corps augmenté</a>
       </div>
     </div>
   </section>
@@ -553,9 +610,9 @@
 
   <!-- Lecteur Modal Google Drive avec Texte et Synopsis -->
   <div class="modal" id="videoModal">
-    <div class="modal-content">
+    <div class="modal-content" id="modalContentWrapper">
       <span class="close-btn" onclick="closeModal()">&times;</span>
-      <div class="modal-video-container">
+      <div class="modal-video-container" id="modalVideoContainer">
         <iframe id="drivePlayer" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
       <div class="modal-text-container" id="modalTextContainer">
@@ -880,10 +937,15 @@
 
     function playDriveVideo(fileId, episodeTitle, episodeSynopsis) {
       const modal = document.getElementById('videoModal');
+      const modalContent = document.getElementById('modalContentWrapper');
+      const videoContainer = document.getElementById('modalVideoContainer');
       const player = document.getElementById('drivePlayer');
       const titleEl = document.getElementById('modalEpisodeTitle');
       const textEl = document.getElementById('modalEpisodeText');
       const textContainer = document.getElementById('modalTextContainer');
+
+      modalContent.classList.remove('info-only');
+      videoContainer.style.display = 'flex';
 
       player.src = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1`;
       titleEl.textContent = episodeTitle || "Extrait de la thèse";
@@ -892,9 +954,7 @@
       textContainer.scrollTop = 0;
       modal.classList.add('active');
 
-      // Positionnement immédiat sur la vidéo à l'ouverture de la modale
       setTimeout(() => {
-        const videoContainer = document.querySelector('.modal-video-container');
         if (videoContainer) {
           player.focus();
           const rect = videoContainer.getBoundingClientRect();
@@ -910,6 +970,26 @@
           videoContainer.dispatchEvent(mouseEvent);
         }
       }, 100);
+    }
+
+    function openInfoModal() {
+      const modal = document.getElementById('videoModal');
+      const modalContent = document.getElementById('modalContentWrapper');
+      const videoContainer = document.getElementById('modalVideoContainer');
+      const player = document.getElementById('drivePlayer');
+      const titleEl = document.getElementById('modalEpisodeTitle');
+      const textEl = document.getElementById('modalEpisodeText');
+      const textContainer = document.getElementById('modalTextContainer');
+
+      player.src = '';
+      videoContainer.style.display = 'none';
+      modalContent.classList.add('info-only');
+
+      titleEl.textContent = "À propos du projet";
+      textEl.innerHTML = "La décision de soustraire \"L’aventure du corps\" aux logiques algorithmiques des grandes plateformes relève d’une résistance nécessaire contre l'uniformisation du regard et la marchandisation de l’attention. Les géants du numérique fragmentent la pensée, broient la complexité épistémologique et réduisent une recherche doctorale à un flux de consommation stérile. Refuser cette vitrine, c’est refuser la soumission aux métriques de l'engagement. Pour autant, paradoxalement, je confie le contenant à l'intelligence artificielle. Cette armature technologique, loin de trahir le travail universitaire initial, agit comme un scalpel structurel. L'IA devient ici l'architecte invisible d'une diffusion rigoureuse, préservant l'intégrité conceptuelle tout en contournant l'entropie des réseaux sociaux dominants.";
+
+      textContainer.scrollTop = 0;
+      modal.classList.add('active');
     }
 
     function closeModal() {
