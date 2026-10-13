@@ -3,13 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aventure du corps</title>
+  <title>L'Aventure du corps — Édition Académique</title>
+  <!-- Chargement des polices académiques et élégantes (Cormorant Garamond et Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg-color: #141414;
-      --card-width: 300px;
-      --card-height: 170px;
-      --accent-color: #e50914;
+      --bg-color: #f7f5f0; /* Parchemin chaud / papier de recherche */
+      --surface-color: #ffffff;
+      --surface-alt: #f0ece1;
+      --text-main: #2c2a29;
+      --text-muted: #6b6764;
+      --accent-color: #8c3f24; /* Terracotta académique / encre de chine sombre */
+      --accent-hover: #6d301b;
+      --border-color: #e2ded4;
+      --card-width: 290px;
+      --card-height: 165px;
+      --shadow-subtle: 0 4px 20px rgba(44, 42, 41, 0.06);
+      --shadow-hover: 0 12px 30px rgba(44, 42, 41, 0.12);
     }
 
     * {
@@ -20,67 +33,81 @@
 
     body {
       background-color: var(--bg-color);
-      color: #ffffff;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
       overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* En-tête / Navigation style Netflix */
+    h1, h2, h3, .logo, .season-title {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* En-tête / Navigation style revue savante / universitaire */
     header {
       position: fixed;
       top: 0;
       width: 100%;
-      height: 68px;
-      padding: 0 4%;
+      height: 76px;
+      padding: 0 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(0,0,0,0.8) 10%, transparent);
+      background: rgba(247, 245, 240, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
       z-index: 100;
-      transition: background-color 0.4s;
+      transition: background-color 0.4s, box-shadow 0.4s;
     }
 
     header.scrolled {
-      background-color: #141414;
+      background-color: var(--surface-color);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
     }
 
     .logo {
       color: var(--accent-color);
-      font-size: 1.8rem;
-      font-weight: bold;
-      letter-spacing: 1px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
     }
 
     nav ul {
       display: flex;
       list-style: none;
-      gap: 20px;
+      gap: 24px;
+      align-items: center;
     }
 
     nav a {
-      color: #e5e5e5;
+      color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.3s;
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.3s, border-bottom 0.3s;
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
     }
 
     nav a:hover {
-      color: #b3b3b3;
+      color: var(--accent-color);
+      border-bottom-color: var(--accent-color);
     }
 
-    /* Hero Banner interactif avec vidéo au survol */
+    /* Hero Banner académique interactif avec vidéo au survol */
     .hero {
       position: relative;
-      height: 52vh;
-      min-height: 380px;
-      background: #141414;
+      height: 55vh;
+      min-height: 420px;
+      background: var(--surface-color);
       display: flex;
       align-items: flex-end;
-      padding: 0 4% 30px 4%;
-      margin-top: 98px;
+      padding: 0 5% 40px 5%;
+      margin-top: 76px;
       overflow: hidden;
-      cursor: default;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .hero-bg-image {
@@ -91,7 +118,9 @@
       height: 100%;
       background: url('https://lh3.googleusercontent.com/d/1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j') center/cover no-repeat;
       z-index: 1;
-      transition: opacity 0.4s ease;
+      opacity: 0.25;
+      filter: sepia(20%);
+      transition: opacity 0.5s ease;
     }
 
     .hero-bg-video {
@@ -103,12 +132,12 @@
       object-fit: cover;
       opacity: 0;
       z-index: 2;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
       pointer-events: none;
     }
 
     .hero:hover .hero-bg-video {
-      opacity: 1;
+      opacity: 0.85;
     }
 
     .hero-overlay {
@@ -117,8 +146,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, var(--bg-color) 0%, transparent 60%),
-                  radial-gradient(circle, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+      background: linear-gradient(to top, var(--bg-color) 0%, rgba(247,245,240,0.4) 60%, transparent 100%);
       z-index: 3;
       pointer-events: none;
     }
@@ -126,115 +154,125 @@
     .hero-content {
       position: relative;
       z-index: 4;
-      max-width: 1200px;
+      max-width: 1100px;
       width: 100%;
     }
 
     .hero-content h1 {
-      font-size: 3rem;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--text-main);
       margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: -0.5px;
     }
 
     .hero-content p {
-      font-size: 1.1rem;
-      line-height: 1.4;
-      color: #cccccc;
-      margin-bottom: 20px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-      max-width: 800px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      max-width: 850px;
+      font-weight: 300;
     }
 
-    /* Conteneur des boutons aligné sur une seule ligne sans scrollbar */
+    /* Conteneur des boutons académiques aligné sur une seule ligne */
     .hero-buttons {
       display: flex;
       flex-wrap: nowrap;
-      gap: 10px;
+      gap: 12px;
       overflow: visible;
     }
 
     .hero-buttons button,
     .hero-buttons a.btn-link {
-      padding: 9px 18px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       white-space: nowrap;
-      transition: opacity 0.2s;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
     }
 
     .btn-play {
-      background-color: #ffffff;
-      color: #000000;
-    }
-
-    .btn-info {
-      background-color: rgba(109, 109, 110, 0.7);
+      background-color: var(--accent-color);
       color: #ffffff;
+      border-color: var(--accent-color);
     }
 
+    .btn-play:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-info,
     .btn-thesis,
     .btn-amazon {
-      background-color: rgba(109, 109, 110, 0.7);
-      color: #ffffff;
+      background-color: var(--surface-color);
+      color: var(--text-main);
+      border-color: var(--border-color);
+      box-shadow: var(--shadow-subtle);
     }
 
     .hero-buttons button:hover,
     .hero-buttons a.btn-link:hover {
-      opacity: 0.8;
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      transform: translateY(-1px);
     }
 
-    /* Rangees de Saisons */
+    /* Rangees de Saisons / Époques académiques */
     .content-container {
-      padding: 20px 0 60px 0;
-      margin-top: -20px;
+      padding: 40px 0 80px 0;
       position: relative;
       z-index: 10;
     }
 
     .season-row {
-      margin-bottom: 40px;
-      padding: 0 4%;
-      scroll-margin-top: 90px;
+      margin-bottom: 50px;
+      padding: 0 5%;
+      scroll-margin-top: 100px;
     }
 
     .season-header {
       display: flex;
       align-items: baseline;
       gap: 15px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
     }
 
     .season-title {
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      color: #e5e5e5;
+      color: var(--text-main);
     }
 
     .season-notice {
       font-size: 0.85rem;
-      color: #888888;
+      color: var(--text-muted);
       font-style: italic;
-      font-weight: normal;
+      font-weight: 300;
     }
 
-    /* Carrousel */
+    /* Carrousel académique */
     .carousel-wrapper {
       position: relative;
     }
 
     .carousel {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       overflow-x: auto;
       scroll-behavior: smooth;
-      padding: 15px 0;
+      padding: 10px 2px 20px 2px;
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
@@ -243,7 +281,7 @@
       display: none;
     }
 
-    /* Cards / Vignettes d'episodes */
+    /* Cards / Vignettes d'episodes épurées */
     .card {
       flex: 0 0 var(--card-width);
       height: var(--card-height);
@@ -251,20 +289,24 @@
       border-radius: 4px;
       overflow: hidden;
       cursor: pointer;
-      background-color: #2f2f2f;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: var(--surface-alt);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
     .card:hover {
-      transform: scale(1.12);
+      transform: translateY(-6px);
       z-index: 20;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent-color);
     }
 
     .card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      filter: brightness(0.95);
     }
 
     .card video {
@@ -288,40 +330,47 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 10px;
-      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      padding: 12px;
+      background: linear-gradient(to top, rgba(30,34,41,0.95) 20%, rgba(30,34,41,0.7) 70%, transparent);
+      color: #ffffff;
       opacity: 1;
     }
 
     .card-title {
-      font-size: 0.9rem;
-      font-weight: bold;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.3;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
     .card-subtitle {
       font-size: 0.75rem;
-      color: #aaaaaa;
-      margin-top: 2px;
+      color: #d1cbd5;
+      margin-top: 3px;
+      font-weight: 300;
     }
 
-    /* Boutons du carrousel */
+    /* Boutons de navigation du carrousel discrets et élégants */
     .nav-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      border: none;
-      color: white;
-      font-size: 2rem;
+      width: 44px;
+      height: 52px;
+      background: rgba(247, 245, 240, 0.9);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 1.4rem;
       cursor: pointer;
       z-index: 25;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transition: opacity 0.3s, background 0.3s;
+      transition: opacity 0.3s, background 0.3s, color 0.3s;
+      border-radius: 2px;
+      box-shadow: var(--shadow-subtle);
     }
 
     .carousel-wrapper:hover .nav-btn {
@@ -329,22 +378,25 @@
     }
 
     .nav-btn:hover {
-      background: rgba(0,0,0,0.8);
+      background: var(--surface-color);
+      color: var(--accent-color);
+      border-color: var(--accent-color);
     }
 
-    .nav-btn.left { left: -4%; }
-    .nav-btn.right { right: -4%; }
+    .nav-btn.left { left: -22px; }
+    .nav-btn.right { right: -22px; }
 
-    /* Modal lecteur Google Drive avec panneau latéral */
+    /* Modal lecteur académique avec panneau latéral typographique */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(44, 42, 41, 0.75);
+      backdrop-filter: blur(5px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 30px;
     }
 
     .modal.active {
@@ -354,11 +406,12 @@
     .modal-content {
       position: relative;
       width: 95%;
-      max-width: 1300px;
-      background: #181818;
-      border-radius: 8px;
+      max-width: 1250px;
+      background: var(--surface-color);
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
       overflow: hidden;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
       display: flex;
       flex-direction: row;
       align-items: stretch;
@@ -374,7 +427,7 @@
 
     .modal-video-container {
       flex: 1.5;
-      background: #000;
+      background: #111;
       aspect-ratio: 16/9;
       position: relative;
       display: flex;
@@ -389,66 +442,66 @@
 
     .modal-text-container {
       flex: 1;
-      padding: 25px 30px;
+      padding: 30px 35px;
       display: flex;
       flex-direction: column;
-      background: #181818;
-      border-left: 1px solid #2a2a2a;
+      background: var(--surface-color);
+      border-left: 1px solid var(--border-color);
       max-height: 100%;
       overflow-y: auto; 
     }
 
     .modal-text-container::-webkit-scrollbar {
-      width: 6px;
+      width: 5px;
     }
 
     .modal-text-container::-webkit-scrollbar-track {
-      background: #181818;
+      background: var(--surface-color);
     }
 
     .modal-text-container::-webkit-scrollbar-thumb {
-      background: #444444;
+      background: #d1cbd5;
       border-radius: 3px;
     }
 
-    .modal-text-container::-webkit-scrollbar-thumb:hover {
-      background: #666666;
-    }
-
     .modal-text-container h3 {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      color: #ffffff;
-      border-bottom: 2px solid var(--accent-color);
-      padding-bottom: 6px;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--accent-color);
+      padding-bottom: 8px;
       display: inline-block;
+      font-weight: 700;
     }
 
     .modal-text-container p {
       font-size: 0.95rem;
-      line-height: 1.5;
-      color: #d1d1d1;
+      line-height: 1.7;
+      color: var(--text-muted);
       text-align: justify;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
     }
 
     .modal-text-container p a {
-      color: #ff6b6b;
+      color: var(--accent-color);
       text-decoration: underline;
     }
 
     .modal-text-container p a:hover {
-      color: #ff9999;
+      color: var(--accent-hover);
     }
 
     .close-btn {
       position: absolute;
       top: 15px;
       right: 20px;
-      color: white;
-      font-size: 2.5rem;
+      color: var(--text-muted);
+      font-size: 2.2rem;
       cursor: pointer;
       z-index: 1010;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      line-height: 1;
+      transition: color 0.2s;
     }
 
     .close-btn:hover {
@@ -459,7 +512,7 @@
 <body>
 
   <header id="navbar">
-    <div class="logo">ÉPOQUES</div>
+    <div class="logo">Époques & Corpus</div>
     <nav>
       <ul>
         <li><a href="#">Accueil</a></li>
@@ -479,19 +532,19 @@
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1>L'Aventure du Corps</h1>
-      <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’IA devient un outil au service de la vulgarisation scientifique.</p>
+      <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’intelligence artificielle devient un instrument rigoureux au service de la vulgarisation scientifique et de l'épistémologie corporelle.</p>
       <div class="hero-buttons">
-        <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Lecture</button>
-        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis">📖 Thèse de doctorat de Pierre Fraser</a>
-        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Le corps idéal</a>
-        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Le corps augmenté</a>
+        <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Visionner l'introduction</button>
+        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis">📖 Thèse de doctorat (2015) — P. Fraser</a>
+        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Monographie : Le corps idéal</a>
+        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon">🛒 Monographie : Le corps augmenté</a>
       </div>
     </div>
   </section>
 
   <main class="content-container" id="seasons-container"></main>
 
-  <!-- Lecteur Modal Google Drive avec Texte -->
+  <!-- Lecteur Modal Google Drive avec Texte et Synopsis -->
   <div class="modal" id="videoModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -829,6 +882,25 @@
 
       textContainer.scrollTop = 0;
       modal.classList.add('active');
+
+      // Positionnement immédiat sur la vidéo à l'ouverture de la modale
+      setTimeout(() => {
+        const videoContainer = document.querySelector('.modal-video-container');
+        if (videoContainer) {
+          player.focus();
+          const rect = videoContainer.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          const mouseEvent = new MouseEvent('mousemove', {
+            bubbles: true,
+            cancelable: true,
+            clientX: centerX,
+            clientY: centerY
+          });
+          videoContainer.dispatchEvent(mouseEvent);
+        }
+      }, 100);
     }
 
     function closeModal() {
@@ -847,7 +919,7 @@
 
     window.addEventListener('scroll', () => {
       const navbar = document.getElementById('navbar');
-      if (window.scrollY > 50) {
+      if (window.scrollY > 40) {
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
