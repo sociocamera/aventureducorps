@@ -255,6 +255,13 @@
       color: var(--text-main);
     }
 
+    .season-count {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+
     .season-notice {
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -765,7 +772,9 @@
 
       const title = document.createElement('h2');
       title.className = 'season-title';
-      title.textContent = season.title;
+      
+      const videoCount = season.episodes.length;
+      title.innerHTML = `${season.title} <span class="season-count">(${videoCount})</span>`;
       headerDiv.appendChild(title);
 
       if (season.notice) {
