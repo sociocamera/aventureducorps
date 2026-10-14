@@ -19,8 +19,8 @@
       --accent-color: #8c3f24; /* Terracotta académique / encre de chine sombre */
       --accent-hover: #6d301b;
       --border-color: #e2ded4;
-      --card-width: 290px;
-      --card-height: 165px;
+      --card-width: calc((100vw - 10% - (4 * 16px)) / 5);
+      --card-height: calc(var(--card-width) * 9 / 16);
       --shadow-subtle: 0 4px 20px rgba(44, 42, 41, 0.06);
       --shadow-hover: 0 12px 30px rgba(44, 42, 41, 0.12);
     }
