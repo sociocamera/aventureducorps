@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>L'Aventure du corps — Édition Académique</title>
+
+  <!-- Balises Open Graph / Réseaux sociaux -->
+  <meta property="og:title" content="L'Aventure du corps — Édition Académique">
+  <meta property="og:description" content="Série documentaire retraçant les représentations et régulations du corps humain à travers les époques, d'après la thèse de doctorat de Pierre Fraser (2015).">
+  <meta property="og:image" content="https://raw.githubusercontent.com/sociocamera/aventureducorps/main/aventure_corps.jpeg">
+  <meta property="og:url" content="https://sociocamera.github.io/aventureducorps/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="L'Aventure du corps — Édition Académique">
+  <meta name="twitter:description" content="Série documentaire retraçant les représentations et régulations du corps humain à travers les époques, d'après la thèse de doctorat de Pierre Fraser (2015).">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/sociocamera/aventureducorps/main/aventure_corps.jpg">
+
   <!-- Chargement des polices académiques et élégantes (Cormorant Garamond et Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1042,7 +1056,7 @@
       modal.classList.add('active');
     }
 
-function openPayPalModal() {
+    function openPayPalModal() {
       const modal = document.getElementById('videoModal');
       const modalContent = document.getElementById('modalContentWrapper');
       const videoContainer = document.getElementById('modalVideoContainer');
@@ -1051,7 +1065,6 @@ function openPayPalModal() {
       const textEl = document.getElementById('modalEpisodeText');
       const textContainer = document.getElementById('modalTextContainer');
 
-      // On cache le lecteur vidéo/iframe inutile ici
       videoContainer.style.display = 'none';
       modalContent.classList.add('info-only');
       player.src = '';
