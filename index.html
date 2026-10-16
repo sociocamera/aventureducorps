@@ -184,7 +184,8 @@
     }
 
     .hero-buttons button,
-    .hero-buttons a.btn-link {
+    .hero-buttons a.btn-link,
+    .hero-buttons .btn-paypal-discreet {
       padding: 10px 20px;
       font-size: 0.88rem;
       font-weight: 500;
@@ -211,7 +212,6 @@
       border-color: var(--accent-hover);
     }
 
-    /* Bouton "Plus d'infos" sur fond grisé */
     .btn-info {
       background-color: #e8e5dc;
       color: var(--text-main);
@@ -225,7 +225,6 @@
       color: var(--text-main);
     }
 
-    /* Bouton Thèse de doctorat (fond chêne / sable doux) */
     .btn-thesis {
       background-color: #ece6d8;
       color: #3b3530;
@@ -239,7 +238,6 @@
       color: #2c2a29;
     }
 
-    /* Premier bouton Amazon : Le corps idéal (fond vert-de-gris subtil) */
     .btn-amazon-ideal {
       background-color: #e0e5e1;
       color: #2d3830;
@@ -253,7 +251,6 @@
       color: #1f2721;
     }
 
-    /* Second bouton Amazon : Le corps augmenté (fond ocre / terre cuite claire) */
     .btn-amazon-augmented {
       background-color: #f2e6e1;
       color: #4a2c22;
@@ -267,8 +264,30 @@
       color: #382018;
     }
 
+    /* Bouton PayPal discret et jaune dans la barre de boutons */
+    .btn-paypal-discreet {
+      background-color: #ffc439;
+      color: #003087;
+      border-color: #e0ac28;
+      box-shadow: var(--shadow-subtle);
+      gap: 6px;
+    }
+
+    .btn-paypal-discreet:hover {
+      background-color: #f4b82d;
+      border-color: #cca322;
+      color: #002266;
+    }
+
+    .btn-paypal-discreet svg {
+      width: 14px;
+      height: 14px;
+      fill: #003087;
+    }
+
     .hero-buttons button:hover,
-    .hero-buttons a.btn-link:hover {
+    .hero-buttons a.btn-link:hover,
+    .hero-buttons .btn-paypal-discreet:hover {
       transform: translateY(-1px);
     }
 
@@ -560,7 +579,6 @@
       color: var(--accent-color);
     }
 
-    /* Style spécifique pour la modale textuelle "Plus d'infos" (sans lecteur vidéo) */
     .modal-content.info-only {
       max-width: 700px;
       flex-direction: column;
@@ -597,11 +615,17 @@
       <h1>L'Aventure du Corps</h1>
       <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’intelligence artificielle devient un instrument rigoureux au service de la vulgarisation scientifique et de l'épistémologie corporelle.</p>
       <div class="hero-buttons">
-        <button class="btn-play" onclick="playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Visionner l'introduction</button>
-        <button class="btn-info" onclick="openInfoModal()">ℹ️ Plus d'infos</button>
-        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis">📖 Thèse de doctorat (2015) — P. Fraser</a>
-        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-ideal">🛒 Monographie : Le corps idéal</a>
-        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-augmented">🛒 Monographie : Le corps augmenté</a>
+        <button class="btn-play" onclick="logEvent('Bouton supérieur', 'Introduction', 'Bande-annonce'); playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Visionner l'introduction</button>
+        <button class="btn-info" onclick="logEvent('Bouton supérieur', 'Plus d\'infos', ''); openInfoModal()">ℹ️ Plus d'infos</button>
+        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis" onclick="logEvent('Bouton supérieur', 'Thèse de doctorat', '')">📖 Thèse de doctorat (2015) — P. Fraser</a>
+        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-ideal" onclick="logEvent('Bouton supérieur', 'Monographie Le corps idéal', '')">🛒 Monographie : Le corps idéal</a>
+        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-augmented" onclick="logEvent('Bouton supérieur', 'Monographie Le corps augmenté', '')">🛒 Monographie : Le corps augmenté</a>
+        <button class="btn-paypal-discreet" onclick="logEvent('Bouton supérieur', 'PayPal', ''); openPayPalModal()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .758-.63h6.35c2.42 0 4.25.59 5.29 1.71 1.01 1.09 1.25 2.76.71 4.96-.69 2.82-2.31 4.67-4.81 5.51-1.12.38-2.48.57-4.04.57H7.72a.56.56 0 0 0-.55.47l-.094.527-.01.05-1.026 5.816a.41.41 0 0 0 .405.479zm11.233-14.8c-.53-.6-1.53-.94-3.04-.94H10.15a.43.43 0 0 0-.42.36l-1.39 8.86h2.15c1.17 0 2.2-.13 3.06-.41 1.95-.64 3.23-2.02 3.77-4.22.42-1.7-.12-2.91-1.14-3.65z"/>
+          </svg>
+          Contribuer par un don au financement de ce projet
+        </button>
       </div>
     </div>
   </section>
@@ -623,6 +647,32 @@
   </div>
 
   <script>
+    // URL de votre Web App Google Apps Script configurée
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIDtNdLd8FLJGF8GQR7GNvhMS3UNd3Oub1FEbvpWRHEm7nwqQWoEjp-wZ3ZGtB_UUV/exec";
+
+    function logEvent(type, theme, videoTitle) {
+      if (!APPS_SCRIPT_URL) return;
+      
+      const payload = {
+        type: type,
+        theme: theme,
+        video: videoTitle || ''
+      };
+
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error("Erreur de suivi :", err));
+    }
+
+    window.addEventListener('load', () => {
+      logEvent('Ouverture de page', 'Accueil', '');
+    });
+
     const testVideoFileId = "1bf1izrxofAyoAsUn7g-QclbvITF_eT6B";
     const testThumbnailFileId = "1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j";
 
@@ -865,6 +915,7 @@
 
         card.onclick = () => {
           document.querySelectorAll('.card.highlight-card').forEach(c => c.classList.remove('highlight-card'));
+          logEvent('Vidéo', season.title, ep.title);
           playDriveVideo(ep.fileId, ep.title, ep.synopsis);
         };
 
@@ -918,7 +969,6 @@
       container.appendChild(row);
     });
 
-    // Gestion du survol pour la bannière Hero
     const heroBanner = document.getElementById('heroBanner');
     const heroVideo = document.getElementById('heroVideo');
 
@@ -987,6 +1037,37 @@
 
       titleEl.textContent = "À propos du projet";
       textEl.innerHTML = "La décision de soustraire \"L’aventure du corps\" aux logiques algorithmiques des grandes plateformes relève d’une résistance nécessaire contre l'uniformisation du regard et la marchandisation de l’attention. Les géants du numérique fragmentent la pensée, broient la complexité épistémologique et réduisent une recherche doctorale à un flux de consommation stérile. Refuser cette vitrine, c’est refuser la soumission aux métriques de l'engagement. Pour autant, paradoxalement, je confie le contenant à l'intelligence artificielle. Cette armature technologique, loin de trahir le travail universitaire initial, agit comme un scalpel structurel. L'IA devient ici l'architecte invisible d'une diffusion rigoureuse, préservant l'intégrité conceptuelle tout en contournant l'entropie des réseaux sociaux dominants.";
+
+      textContainer.scrollTop = 0;
+      modal.classList.add('active');
+    }
+
+function openPayPalModal() {
+      const modal = document.getElementById('videoModal');
+      const modalContent = document.getElementById('modalContentWrapper');
+      const videoContainer = document.getElementById('modalVideoContainer');
+      const player = document.getElementById('drivePlayer');
+      const titleEl = document.getElementById('modalEpisodeTitle');
+      const textEl = document.getElementById('modalEpisodeText');
+      const textContainer = document.getElementById('modalTextContainer');
+
+      // On cache le lecteur vidéo/iframe inutile ici
+      videoContainer.style.display = 'none';
+      modalContent.classList.add('info-only');
+      player.src = '';
+
+      titleEl.textContent = "Soutenir le projet";
+      textEl.innerHTML = `
+        <p style="margin-bottom: 20px;">Votre contribution permet de soutenir la pérennité et la diffusion indépendante de cette série documentaire et de ses travaux de recherche associés.</p>
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="https://www.paypal.com/donate/?hosted_button_id=SPATMUXAZJWHU" target="_blank" rel="noopener noreferrer" style="background-color: #ffc439; color: #003087; padding: 12px 24px; border-radius: 4px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="#003087">
+              <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .758-.63h6.35c2.42 0 4.25.59 5.29 1.71 1.01 1.09 1.25 2.76.71 4.96-.69 2.82-2.31 4.67-4.81 5.51-1.12.38-2.48.57-4.04.57H7.72a.56.56 0 0 0-.55.47l-.094.527-.01.05-1.026 5.816a.41.41 0 0 0 .405.479zm11.233-14.8c-.53-.6-1.53-.94-3.04-.94H10.15a.43.43 0 0 0-.42.36l-1.39 8.86h2.15c1.17 0 2.2-.13 3.06-.41 1.95-.64 3.23-2.02 3.77-4.22.42-1.7-.12-2.91-1.14-3.65z"/>
+            </svg>
+            Procéder au don sécurisé sur PayPal
+          </a>
+        </div>
+      `;
 
       textContainer.scrollTop = 0;
       modal.classList.add('active');
