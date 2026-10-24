@@ -1,1113 +1,1709 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L'Aventure du corps — Édition Académique</title>
-
-  <!-- Balises Open Graph / Réseaux sociaux -->
-  <meta property="og:title" content="L'Aventure du corps — Édition Académique">
-  <meta property="og:description" content="Série documentaire retraçant les représentations et régulations du corps humain à travers les époques, d'après la thèse de doctorat de Pierre Fraser (2015).">
-  <meta property="og:image" content="https://raw.githubusercontent.com/sociocamera/aventureducorps/main/aventure_corps.jpeg">
-  <meta property="og:url" content="https://sociocamera.github.io/aventureducorps/">
-  <meta property="og:type" content="website">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="L'Aventure du corps — Édition Académique">
-  <meta name="twitter:description" content="Série documentaire retraçant les représentations et régulations du corps humain à travers les époques, d'après la thèse de doctorat de Pierre Fraser (2015).">
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/sociocamera/aventureducorps/main/aventure_corps.jpg">
-
-  <!-- Chargement des polices académiques et élégantes (Cormorant Garamond et Inter) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --bg-color: #f7f5f0; /* Parchemin chaud / papier de recherche */
-      --surface-color: #ffffff;
-      --surface-alt: #f0ece1;
-      --text-main: #2c2a29;
-      --text-muted: #6b6764;
-      --accent-color: #8c3f24; /* Terracotta académique / encre de chine sombre */
-      --accent-hover: #6d301b;
-      --border-color: #e2ded4;
-      --card-width: calc((100vw - 10% - (4 * 16px)) / 5);
-      --card-height: calc(var(--card-width) * 9 / 16);
-      --shadow-subtle: 0 4px 20px rgba(44, 42, 41, 0.06);
-      --shadow-hover: 0 12px 30px rgba(44, 42, 41, 0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-
-    h1, h2, h3, .logo, .season-title {
-      font-family: 'Cormorant Garamond', serif;
-    }
-
-    /* En-tête / Navigation style revue savante / universitaire */
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: 76px;
-      padding: 0 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(247, 245, 240, 0.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-color);
-      z-index: 100;
-      transition: background-color 0.4s, box-shadow 0.4s;
-    }
-
-    header.scrolled {
-      background-color: var(--surface-color);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-    }
-
-    .logo {
-      color: var(--accent-color);
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 24px;
-      align-items: center;
-    }
-
-    nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      transition: color 0.3s, border-bottom 0.3s;
-      padding-bottom: 3px;
-      border-bottom: 1px solid transparent;
-    }
-
-    nav a:hover {
-      color: var(--accent-color);
-      border-bottom-color: var(--accent-color);
-    }
-
-    /* Hero Banner académique interactif avec vidéo au survol */
-    .hero {
-      position: relative;
-      height: 55vh;
-      min-height: 420px;
-      background: var(--surface-color);
-      display: flex;
-      align-items: flex-end;
-      padding: 0 5% 40px 5%;
-      margin-top: 76px;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .hero-bg-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://lh3.googleusercontent.com/d/1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j') center/cover no-repeat;
-      z-index: 1;
-      opacity: 0.25;
-      filter: sepia(20%);
-      transition: opacity 0.5s ease;
-    }
-
-    .hero-bg-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      z-index: 2;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-
-    .hero:hover .hero-bg-video {
-      opacity: 0.85;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, var(--bg-color) 0%, rgba(247,245,240,0.4) 60%, transparent 100%);
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 4;
-      max-width: 1100px;
-      width: 100%;
-    }
-
-    .hero-content h1 {
-      font-size: 3.2rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 15px;
-      letter-spacing: -0.5px;
-    }
-
-    .hero-content p {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: var(--text-muted);
-      margin-bottom: 25px;
-      max-width: 850px;
-      font-weight: 300;
-    }
-
-    /* Conteneur des boutons académiques aligné sur une seule ligne */
-    .hero-buttons {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 12px;
-      overflow: visible;
-    }
-
-    .hero-buttons button,
-    .hero-buttons a.btn-link,
-    .hero-buttons .btn-paypal-discreet {
-      padding: 10px 20px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      border: 1px solid var(--border-color);
-      border-radius: 2px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      transition: all 0.25s ease;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .btn-play {
-      background-color: var(--accent-color);
-      color: #ffffff;
-      border-color: var(--accent-color);
-    }
-
-    .btn-play:hover {
-      background-color: var(--accent-hover);
-      border-color: var(--accent-hover);
-    }
-
-    .btn-info {
-      background-color: #e8e5dc;
-      color: var(--text-main);
-      border-color: #d6d1c4;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .btn-info:hover {
-      background-color: #ded9cc;
-      border-color: var(--text-muted);
-      color: var(--text-main);
-    }
-
-    .btn-thesis {
-      background-color: #ece6d8;
-      color: #3b3530;
-      border-color: #d6ccb8;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .btn-thesis:hover {
-      background-color: #e2d8c4;
-      border-color: #bfae96;
-      color: #2c2a29;
-    }
-
-    .btn-amazon-ideal {
-      background-color: #e0e5e1;
-      color: #2d3830;
-      border-color: #cfd8d0;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .btn-amazon-ideal:hover {
-      background-color: #d1dcd3;
-      border-color: #abc0b3;
-      color: #1f2721;
-    }
-
-    .btn-amazon-augmented {
-      background-color: #f2e6e1;
-      color: #4a2c22;
-      border-color: #e2cfc7;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .btn-amazon-augmented:hover {
-      background-color: #ebd7ce;
-      border-color: #c9a697;
-      color: #382018;
-    }
-
-    /* Bouton PayPal discret et jaune dans la barre de boutons */
-    .btn-paypal-discreet {
-      background-color: #ffc439;
-      color: #003087;
-      border-color: #e0ac28;
-      box-shadow: var(--shadow-subtle);
-      gap: 6px;
-    }
-
-    .btn-paypal-discreet:hover {
-      background-color: #f4b82d;
-      border-color: #cca322;
-      color: #002266;
-    }
-
-    .btn-paypal-discreet svg {
-      width: 14px;
-      height: 14px;
-      fill: #003087;
-    }
-
-    .hero-buttons button:hover,
-    .hero-buttons a.btn-link:hover,
-    .hero-buttons .btn-paypal-discreet:hover {
-      transform: translateY(-1px);
-    }
-
-    /* Rangees de Saisons / Époques académiques */
-    .content-container {
-      padding: 40px 0 80px 0;
-      position: relative;
-      z-index: 10;
-    }
-
-    .season-row {
-      margin-bottom: 50px;
-      padding: 0 5%;
-      scroll-margin-top: 100px;
-    }
-
-    .season-header {
-      display: flex;
-      align-items: baseline;
-      gap: 15px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-
-    .season-title {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .season-count {
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      font-family: 'Inter', sans-serif;
-    }
-
-    .season-notice {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-style: italic;
-      font-weight: 300;
-    }
-
-    /* Carrousel académique */
-    .carousel-wrapper {
-      position: relative;
-    }
-
-    .carousel {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      padding: 10px 2px 20px 2px;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .carousel::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Cards / Vignettes d'episodes épurées */
-    .card {
-      flex: 0 0 var(--card-width);
-      height: var(--card-height);
-      position: relative;
-      border-radius: 4px;
-      overflow: hidden;
-      cursor: pointer;
-      background-color: var(--surface-alt);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-subtle);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      z-index: 20;
-      box-shadow: var(--shadow-hover);
-      border-color: var(--accent-color);
-    }
-
-    .card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.95);
-    }
-
-    .card video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    .card:hover video {
-      opacity: 1;
-    }
-
-    .card-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 12px;
-      background: linear-gradient(to top, rgba(30,34,41,0.95) 20%, rgba(30,34,41,0.7) 70%, transparent);
-      color: #ffffff;
-      opacity: 1;
-    }
-
-    .card-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
-      line-height: 1.3;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
-
-    .card-subtitle {
-      font-size: 0.75rem;
-      color: #d1cbd5;
-      margin-top: 3px;
-      font-weight: 300;
-    }
-
-    /* Boutons de navigation du carrousel discrets et élégants */
-    .nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 52px;
-      background: rgba(247, 245, 240, 0.9);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      font-size: 1.4rem;
-      cursor: pointer;
-      z-index: 25;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s, background 0.3s, color 0.3s;
-      border-radius: 2px;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .carousel-wrapper:hover .nav-btn {
-      opacity: 1;
-    }
-
-    .nav-btn:hover {
-      background: var(--surface-color);
-      color: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-
-    .nav-btn.left { left: -22px; }
-    .nav-btn.right { right: -22px; }
-
-    /* Modal lecteur académique avec panneau latéral typographique */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(44, 42, 41, 0.75);
-      backdrop-filter: blur(5px);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 30px;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      position: relative;
-      width: 95%;
-      max-width: 1250px;
-      background: var(--surface-color);
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-    }
-
-    @media (max-width: 992px) {
-      .modal-content {
-        flex-direction: column;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-    }
-
-    .modal-video-container {
-      flex: 1.5;
-      background: #111;
-      aspect-ratio: 16/9;
-      position: relative;
-      display: flex;
-    }
-
-    .modal iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-
-    .modal-text-container {
-      flex: 1;
-      padding: 30px 35px;
-      display: flex;
-      flex-direction: column;
-      background: var(--surface-color);
-      border-left: 1px solid var(--border-color);
-      max-height: 100%;
-      overflow-y: auto; 
-    }
-
-    .modal-text-container::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .modal-text-container::-webkit-scrollbar-track {
-      background: var(--surface-color);
-    }
-
-    .modal-text-container::-webkit-scrollbar-thumb {
-      background: #d1cbd5;
-      border-radius: 3px;
-    }
-
-    .modal-text-container h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: var(--text-main);
-      border-bottom: 1px solid var(--accent-color);
-      padding-bottom: 8px;
-      display: inline-block;
-      font-weight: 700;
-    }
-
-    .modal-text-container p {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: var(--text-muted);
-      text-align: justify;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-    }
-
-    .modal-text-container p a {
-      color: var(--accent-color);
-      text-decoration: underline;
-    }
-
-    .modal-text-container p a:hover {
-      color: var(--accent-hover);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      color: var(--text-muted);
-      font-size: 2.2rem;
-      cursor: pointer;
-      z-index: 1010;
-      line-height: 1;
-      transition: color 0.2s;
-    }
-
-    .close-btn:hover {
-      color: var(--accent-color);
-    }
-
-    .modal-content.info-only {
-      max-width: 700px;
-      flex-direction: column;
-    }
-
-    .modal-content.info-only .modal-text-container {
-      border-left: none;
-      max-height: 80vh;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requiem pour une église</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .text-content {
+            font-family: 'Merriweather', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f0ea;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3c9;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bcb8ad;
+        }
+
+        /* --- STYLES NETFLIX POUR LA SECTION VIDÉOS --- */
+        .netflix-content-split {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            background-color: #000;
+            height: 520px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .netflix-main-player {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .netflix-main-player iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Style de la couverture interactive pour déclencher la vidéo */
+        .video-poster-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://lh3.googleusercontent.com/d/18D6spweOIkGqQu0j-7jjShrkteSgiSq0');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-poster-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+        }
+
+        .play-button-ring {
+            width: 72px;
+            height: 72px;
+            background-color: rgba(180, 83, 9, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 11;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .video-poster-overlay:hover .play-button-ring {
+            transform: scale(1.08);
+            background-color: rgb(217, 119, 6);
+        }
+
+        .netflix-synopsis-pane {
+            background-color: #f7fafc;
+            color: #2d3748;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            border-left: 1px solid #333;
+            font-family: "Georgia", "Cambria", serif;
+        }
+
+        .netflix-synopsis-tag {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #718096;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .netflix-synopsis-heading {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .netflix-synopsis-text {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        /* --- STYLES DU SLIDER NETFLIX SOUS LA VIDÉO --- */
+        .netflix-slider-container {
+            margin-top: 1rem;
+            background-color: #111;
+            border-radius: 6px;
+            border: 1px solid #333;
+            padding: 1rem;
+        }
+
+        .netflix-slider-title {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .netflix-thumbnails-track {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: #b45309 #222;
+        }
+
+        .netflix-thumbnail-card {
+            flex: 0 0 160px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .netflix-thumbnail-card:hover {
+            transform: scale(1.03);
+            border-color: #b45309;
+        }
+
+        .netflix-thumbnail-card.active {
+            border-color: #d97706;
+            box-shadow: 0 0 10px rgba(217, 119, 6, 0.4);
+        }
+
+        .netflix-thumbnail-img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+        }
+
+        .netflix-thumbnail-label {
+            padding: 8px;
+            font-size: 0.75rem;
+            color: #e2e8f0;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- STYLES DU SLIDER DE SOUS-ARTICLES --- */
+        .flex-0-0 {
+            flex: 0 0 260px;
+        }
+        .sub-article-card {
+            background-color: #ffffff;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .sub-article-card:hover {
+            transform: translateY(-2px);
+        }
+        .sub-article-card.active {
+            border-color: #b45309;
+            box-shadow: 0 2px 8px rgba(180, 83, 9, 0.15);
+        }
+
+        @media (max-width: 1100px) {
+            .netflix-content-split { grid-template-columns: 1fr; height: auto; }
+            .netflix-main-player { height: 350px; }
+            .netflix-synopsis-pane { max-height: 250px; border-left: none; border-top: 1px solid #ddd; }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-[#fcfbf9] text-stone-800 h-full flex flex-col md:flex-row overflow-hidden">
 
-  <header id="navbar">
-    <div class="logo">Époques</div>
-    <nav>
-      <ul>
-        <li><a href="#">Accueil</a></li>
-        <li><a href="#s1">Renaissance</a></li>
-        <li><a href="#s2">Grand siècle</a></li>
-        <li><a href="#s3">Siècle des Lumières</a></li>
-        <li><a href="#s4">Révolution industrielle</a></li>
-        <li><a href="#s5">Modernité</a></li>
-        <li><a href="#s6">Aujourd'hui</a></li>
-      </ul>
-    </nav>
-  </header>
+    <!-- MENU LATÉRAL GAUCHE -->
+    <aside class="w-full md:w-96 bg-[#f4f2eb] border-r border-stone-300 flex flex-col h-auto md:h-full z-10 shadow-sm">
+        <div class="p-5 border-b border-stone-300 bg-[#edeae1]">
+            <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block mb-0.5">Dossier en développement</span>
+            <h1 class="text-xl font-bold text-stone-900 tracking-tight">REQUIEM POUR UNE ÉGLISE</h1>
+            <p class="text-xs text-stone-600 mt-1">Le devenir du patrimoine religieux bâti</p>
+        </div>
 
-  <section class="hero" id="heroBanner">
-    <div class="hero-bg-image"></div>
-    <video class="hero-bg-video" id="heroVideo" muted loop preload="metadata" src="https://drive.google.com/uc?export=download&id=1bf1izrxofAyoAsUn7g-QclbvITF_eT6B"></video>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>L'Aventure du Corps</h1>
-      <p>Cette série documentaire retraçant les représentations et régulations du corps humain à travers les époques a ceci de particulier que l’IA a essentiellement servi à produire le contenant (entretiens, séquences vidéo, infographie et images), alors que le contenu est tiré de la thèse de doctorat (2015) de Pierre Fraser. Ici, l’intelligence artificielle devient un instrument rigoureux au service de la vulgarisation scientifique et de l'épistémologie corporelle.</p>
-      <div class="hero-buttons">
-        <button class="btn-play" onclick="logEvent('Bouton supérieur', 'Introduction', 'Bande-annonce'); playDriveVideo('1bf1izrxofAyoAsUn7g-QclbvITF_eT6B', 'Bande-annonce')">► Visionner l'introduction</button>
-        <button class="btn-info" onclick="logEvent('Bouton supérieur', 'Plus d\'infos', ''); openInfoModal()">ℹ️ Plus d'infos</button>
-        <a href="https://corpus.ulaval.ca/entities/publication/4124b36f-bf57-47ed-a14c-c672b8e18e24" target="_blank" rel="noopener noreferrer" class="btn-link btn-thesis" onclick="logEvent('Bouton supérieur', 'Thèse de doctorat', '')">📖 Thèse de doctorat (2015) — P. Fraser</a>
-        <a href="https://www.amazon.fr/dp/2923690273" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-ideal" onclick="logEvent('Bouton supérieur', 'Monographie Le corps idéal', '')">🛒 Monographie : Le corps idéal</a>
-        <a href="https://www.amazon.fr/dp/2923690303" target="_blank" rel="noopener noreferrer" class="btn-link btn-amazon-augmented" onclick="logEvent('Bouton supérieur', 'Monographie Le corps augmenté', '')">🛒 Monographie : Le corps augmenté</a>
-        <button class="btn-paypal-discreet" onclick="logEvent('Bouton supérieur', 'PayPal', ''); openPayPalModal()">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .758-.63h6.35c2.42 0 4.25.59 5.29 1.71 1.01 1.09 1.25 2.76.71 4.96-.69 2.82-2.31 4.67-4.81 5.51-1.12.38-2.48.57-4.04.57H7.72a.56.56 0 0 0-.55.47l-.094.527-.01.05-1.026 5.816a.41.41 0 0 0 .405.479zm11.233-14.8c-.53-.6-1.53-.94-3.04-.94H10.15a.43.43 0 0 0-.42.36l-1.39 8.86h2.15c1.17 0 2.2-.13 3.06-.41 1.95-.64 3.23-2.02 3.77-4.22.42-1.7-.12-2.91-1.14-3.65z"/>
-          </svg>
-          Contribuer par un don au financement de ce projet
-        </button>
-      </div>
+        <nav id="slide-menu" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- Bouton Accueil avec l'icône de la maison -->
+            <button onclick="showTextContent()" id="btn-txt" class="w-full text-left p-3 rounded-md text-sm font-medium bg-amber-700 text-white transition-colors flex items-center justify-center shadow-sm space-x-3">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span>Accueil</span>
+            </button>
+
+
+            <!-- Mention "Vidéos" plus grande et avec un espace plus grand au-dessus -->
+            <div class="px-3 pt-6 pb-2 text-sm font-bold uppercase tracking-wider text-stone-700">
+                Vidéos
+            </div>
+
+            <!-- Bouton Déclin de l'Église catholique -->
+            <button class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3" onclick="toggleNetflixDrawer('article-derniere-messe', 'playlist-evolution')">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span>Déclin de l'Église catholique</span>
+            </button>
+
+            <!-- Bouton Le silence des clochers -->
+            <button class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3" onclick="toggleNetflixDrawer('article-silence-clochers', 'playlist-eglises-sursis')">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span>Le silence des clochers</span>
+            </button>
+
+            <!-- Bouton Reconversion ou démolition ? -->
+            <button class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3" onclick="toggleNetflixDrawer('article-reconversion', 'playlist-reconversion')">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span>Reconversion ou démolition ?</span>
+            </button>
+
+            <!-- Bouton Rôle social de l'Église -->
+            <button class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3" onclick="toggleNetflixDrawer('article-role-social', 'playlist-role-social')">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span>Rôle social de l'Église</span>
+            </button>
+
+            <!-- Bouton Les bâtisseurs d'église -->
+            <button class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3" onclick="toggleNetflixDrawer('article-batisseurs', 'playlist-batisseurs')">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                <span>Les bâtisseurs d'église</span>
+            </button>
+
+            <!-- Mention "ARTICLES" -->
+            <div class="px-3 pt-6 pb-2 text-sm font-bold uppercase tracking-wider text-stone-700">
+                ARTICLES
+            </div>
+            <!-- BOUTON MAÎTRE : L'Église, le diocèse et le territoire -->
+            <button onclick="showDioceseContent()" id="btn-diocese-master" class="w-full text-left p-3 rounded-md text-sm font-medium bg-white border border-stone-300 text-stone-700 hover:border-amber-600 transition-colors flex items-center justify-start shadow-2xs space-x-3">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <span>L'Église, le diocèse et le territoire</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ZONE PRINCIPALE -->
+    <main class="flex-1 flex flex-col h-full bg-[#fcfbf9] overflow-hidden">
+        
+        <!-- BARRE DE NAVIGATION SUPÉRIEURE -->
+        <nav class="bg-[#f4f2eb] border-b border-stone-300 p-3 px-6 flex items-center justify-between shrink-0">
+            <div class="flex items-center space-x-2 text-stone-800 font-medium">
+                <svg class="w-4 h-4 shrink-0 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span>Accueil</span>
+            </div>
+            <span class="text-xs text-stone-500 italic">Un projet piloté par la Revue Sociologie Visuelle</span>
+        </nav>
+
+        <!-- CONTAINER DYNAMIQUE (Cadre global élargi) -->
+        <div class="flex-1 overflow-y-auto p-6 md:p-12 flex justify-center items-start">
+            <div id="dynamic-container" class="w-full max-w-7xl">
+                
+                <!-- CONTENU PAR DÉFAUT : En-tête / Texte principal -->
+                <div id="view-text" class="bg-white border border-stone-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-12">
+                        
+                        <!-- Colonne de gauche élargie (7 parts, fond blanc) -->
+                        <div class="header-left md:col-span-7 p-8 md:p-12 flex flex-col justify-between space-y-6">
+                            <div>
+                                <span class="header-badge text-xs uppercase tracking-widest text-amber-800 font-bold block mb-2">Série documentaire sur la disparition du patrimoine religieux bâti du Québec</span>
+                                <h1 class="text-3xl font-bold text-stone-900 tracking-tight">Requiem pour une église</h1>
+                                <p class="header-subtitle text-sm text-stone-500 mt-2 italic">Mutation, désacralisation et mémoire des lieux de culte en milieu contemporain.</p>
+                                
+                                <p class="header-description text-content text-stone-700 text-base leading-relaxed mt-4">
+                                    <span class="text-base font-medium">Ce projet qui est produit par Photo|Société et dirigé par le sociologue</span> <a href="#" onclick="openAboutModal(); return false;" style="color: inherit; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Pierre Fraser</a> (PhD) propose une analyse critique de la transformation accélérée des édifices religieux. À travers une approche croisant la vidéo, la recherche, l'histoire de l'art, la sociologie urbaine et l'architecture prospective, "Requiem pour une église" interroge le vide laissé par l'abandon de la foi catholique et les nouvelles formes d'appropriation mémorielle.
+                                </p>
+                                
+                                <p class="header-description text-content text-stone-700 text-base leading-relaxed mt-4">
+                                    Loin d'une simple déploration nostalgique, cette étude examine comment ces architectures monumentales se redéfinissent comme des espaces de transition, oscillant entre vestiges patrimoniaux et nouvels usages laïcs.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <div class="header-actions-container flex flex-wrap gap-3 mb-4">
+                                    <button class="btn-header-action px-4 py-2 bg-amber-700 text-white rounded text-xs font-semibold hover:bg-amber-800 transition" onclick="openAboutProjectModal()">À propos de ce projet</button>
+                                    <button class="btn-header-action video-action px-4 py-2 bg-stone-900 text-white rounded text-xs font-semibold hover:bg-stone-800 transition" onclick="openPresentationModal()">Visionner la présentation</button>
+                                    <button class="btn-header-action flex items-center gap-2 px-4 py-2 border border-stone-300 rounded text-xs font-semibold text-stone-700 hover:bg-stone-100 transition" onclick="openTournageModal()">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                        Votre proposition de tournage ?
+                                    </button>
+                                </div>
+                                <div class="header-footer-meta text-xs text-stone-500 flex flex-col space-y-1">
+                                    <span>Recherche en Arts & Espace de la Revue Sociologie Visuelle - Photo|Société</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne de droite (5 parts, avec fond sombre exact, texte clair et liens en vert #34d399) -->
+                        <div class="header-right md:col-span-5 p-8 md:p-12 flex flex-col justify-between space-y-6 border-t md:border-t-0 md:border-l" style="background-color: #0b1329; border-color: #1a233e; color: #cbd5e1;">
+                            <div>
+                                <div class="context-title flex items-center gap-2 text-xs font-bold tracking-wider uppercase mb-6" style="color: #cbd5e1;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                    Notes d'intention & Contexte
+                                </div>
+
+                                <div class="context-block mb-6 pb-6" style="border-bottom: 1px solid #1a233e;">
+                                    <div class="context-label text-xs font-bold uppercase tracking-wider mb-2" style="color: #cbd5e1;">Cadre théorique</div>
+                                    <div class="context-text text-sm leading-relaxed" style="color: #94a3b8;">Exploration critique de la notion de requalification de bâtiments religieux et de leur désaffection accélérée.</div>
+                                </div>
+
+                                <div class="context-block mb-6 pb-6" style="border-bottom: 1px solid #1a233e;">
+                                    <div class="context-label text-xs font-bold uppercase tracking-wider mb-2" style="color: #cbd5e1;">Méthodologie</div>
+                                    <div class="context-text text-sm leading-relaxed" style="color: #94a3b8;">Entretiens filmés et articles publiés en collaboration avec des chercheurs et des citoyens. Débats avec des acteurs du milieu. Dépouillement d'archives pour produire des capsules vidéo.</div>
+                                </div>
+
+                                <div class="context-block mb-6">
+                                    <div class="context-label text-xs font-bold uppercase tracking-wider mb-2" style="color: #cbd5e1;">Statut actuel du projet</div>
+                                    <div class="context-text text-sm mb-4" style="color: #94a3b8;">
+                                        <span class="context-status-indicator inline-block w-2 h-2 rounded-full mr-1.5" style="background-color: #34d399;"></span><a href="#" onclick="openPhase3Modal(); return false;" style="color: #34d399; text-decoration: underline; text-underline-offset: 2px;" title="Faire le point sur la Phase III">Phase III</a> — Analyse d'archives
+                                    </div>
+                                    
+                                    <div class="donation-container p-4 rounded space-y-3" style="background-color: #060a17; border: 1px solid #1a233e;">
+                                        <div class="donation-progress-info flex justify-between text-xs font-semibold">
+                                            <a href="#" onclick="openContributionsModal(); return false;" title="Liste des contributions à ce jour" style="color: #34d399; text-decoration: underline;">1 250 $ amassés</a>
+                                            <span style="color: #cbd5e1;">Objectif : 5 000 $</span>
+                                        </div>
+                                        <a href="#" class="progress-bar-wrapper block" onclick="openContributionsModal(); return false;" title="Liste des contributions à ce jour">
+                                            <div class="progress-bar-bg w-full h-2 rounded-full overflow-hidden" style="background-color: #1a233e;">
+                                                <div class="progress-bar-fill h-full" style="width: 25%; background-color: #34d399;"></div>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.paypal.com/donate/?hosted_button_id=SPATMUXAZJWHU" target="_blank" rel="noopener noreferrer" class="btn-paypal block text-center text-xs font-semibold p-2.5 rounded transition shadow-sm" style="background-color: #0284c7; color: #ffffff;">Faire un don pour financer ce projet</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="#article-derniere-messe" class="context-footer-link flex items-center gap-1 text-xs font-semibold hover:underline" style="color: #34d399;">
+                                Explorer les axes d'étude ci-dessous 
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENU MODULAIRE MAÎTRE : Étude "L'empreinte du diocèse romain" -->
+                <div id="view-diocese-master" class="hidden space-y-8 bg-white border border-stone-300 rounded-lg p-8 md:p-12 shadow-sm">
+                    <!-- En-tête de l'étude avec le lecteur audio -->
+                    <div class="border-b border-stone-300 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-amber-800 font-bold block mb-2">Étude sociologique et historique (Article Maître)</span>
+                            <h2 class="text-3xl font-bold text-stone-900 tracking-tight">L'empreinte du diocèse romain au Québec</h2>
+                            <p class="text-sm text-stone-500 mt-2 italic">D'après les travaux et la perspective critique du sociologue Fernand Harvey</p>
+                        </div>
+                        
+                        <!-- Lecteur audio intégré -->
+                        <div class="bg-[#f4f2eb] border border-stone-300 rounded-md p-3 shadow-2xs space-y-1.5 w-full md:w-80 shrink-0">
+                            <div class="flex items-center space-x-2 text-amber-800">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path>
+                                </svg>
+                                <span class="text-[11px] font-semibold uppercase tracking-wider">Exposé audio synchronisé</span>
+                            </div>
+                            <div>
+                                <audio id="audioPlayerDiocese" controls class="w-full h-8 accent-amber-700">
+                                    <source src="https://raw.githubusercontent.com/sociocamera/eglises/audio/L_empreinte_du_dioc%C3%A8se_romain_au_Qu%C3%A9bec.m4a" type="audio/mp4">
+                                    Votre navigateur ne supporte pas l'élément audio.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ZONE DU DIAPORAMA SYNCHRONISÉ (ID unique pour ce conteneur) -->
+                    <div id="synced-slide-container-diocese" class="my-6 bg-white border border-stone-300 rounded-lg p-4 shadow-2xs hidden flex flex-col items-center space-y-3">
+                        <div class="w-full flex justify-between items-center border-b border-stone-200 pb-2">
+                            <h4 id="audio-slide-title-diocese" class="text-xs font-bold uppercase tracking-wider text-amber-800">Diapositive synchronisée</h4>
+                            <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-medium">Synchro active</span>
+                        </div>
+                        <div class="w-full bg-[#f9f8f6] rounded border border-stone-300 flex justify-center p-2">
+                            <img id="audio-slide-img-diocese" src="" alt="Diapositive de l'exposé audio" class="max-h-[380px] object-contain rounded shadow-xs cursor-pointer hover:opacity-95 transition" onclick="openSlideModalFromElement('audio-slide-img-diocese', 'audio-slide-title-diocese')" title="Cliquer pour agrandir la diapositive">
+                        </div>
+                    </div>
+
+                    <!-- --- CONTENEUR DES SOUS-ARTICLES (Lié au maître : sub-articles-container-diocese) --- -->
+                    <div id="sub-articles-container-diocese" class="sub-articles-slider-container my-6 p-4 bg-[#f4f2eb] border border-stone-300 rounded-lg shadow-2xs">
+                        <!-- Injecté dynamiquement par JS -->
+                    </div>
+
+                    <!-- Section Introduction -->
+                    <section class="space-y-4">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Introduction</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Saviez-vous qu'une structure administrative inventée par l'empereur romain Dioclétien il y a plus de 2 000 ans a secrètement tracé la carte de nos banques, de nos syndicats et de nos coopératives au Québec ? Derrière les clochers et les limites paroissiales se cache une véritable franchise bureaucratique qui a servi de plan d'urbanisme social et économique à la société québécoise moderne.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Dans cette leçon basée sur les travaux novateurs du sociologue Fernand Harvey, nous allons découvrir comment une coquille organisationnelle de l'Antiquité est devenue la colonne vertébrale du développement du Québec.
+                        </p>
+                    </section>
+
+                    <!-- Section Points importants -->
+                    <section class="bg-[#f9f8f6] border border-stone-200 rounded-lg p-6 space-y-3">
+                        <h4 class="text-xs uppercase tracking-wider text-amber-800 font-bold">Objectifs de la démonstration</h4>
+                        <ul class="space-y-3 text-stone-700 text-sm">
+                            <li class="flex items-start space-x-2">
+                                <span class="text-amber-700 font-bold">•</span>
+                                <span><strong>Expliquer l'origine</strong> du <em>diocesis</em> romain et son adaptation par l'Église catholique jusqu'à son exportation en Nouvelle-France.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-amber-700 font-bold">•</span>
+                                <span><strong>Analyser de quelle manière</strong> les grandes institutions québécoises (Caisses populaires, syndicats, sociétés de colonisation) se sont calquées sur le réseau diocésain au XIXe siècle.</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="text-amber-700 font-bold">•</span>
+                                <span><strong>Identifier les raisons</strong> historiques et méthodologiques qui ont rendu cette empreinte territoriale « invisible » aux yeux des chercheurs durant plusieurs décennies.</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 1 : Rome antique -->
+                    <section class="space-y-4">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">De la Rome antique à la Nouvelle-France : L'invention d'une franchise bureaucratique</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Lorsqu'on évoque l'Empire romain, on imagine immédiatement des gladiateurs, de grands aqueducs ou des légions en marche. Pourtant, l'un de ses héritages les plus puissants est d'ordre administratif : le <em>diocesis</em>.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Créée à l'origine par l'empereur Dioclétien, cette circonscription était un outil purement bureaucratique destiné à gérer un empire immense. Voyant à quel point cette structure fonctionnait bien, l'Église catholique a récupéré cette coquille organisationnelle pour sa propre gouvernance. Dans ce modèle :
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                            <div class="bg-white border border-stone-200 p-4 rounded shadow-2xs">
+                                <span class="text-xs font-bold text-amber-800 uppercase">Siège centralisé</span>
+                                <p class="text-sm text-stone-700 mt-1">Le Vatican agit comme un centre de commandement unifié.</p>
+                            </div>
+                            <div class="bg-white border border-stone-200 p-4 rounded shadow-2xs">
+                                <span class="text-xs font-bold text-amber-800 uppercase">Supervision régionale</span>
+                                <p class="text-sm text-stone-700 mt-1">Les évêques fonctionnent comme des directeurs régionaux supervisant leur territoire.</p>
+                            </div>
+                        </div>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            En 1674, Monseigneur de Laval exporte ce modèle en Amérique du Nord en fondant le tout premier diocèse à Québec. Il s'agit d'un territoire gigantesque qui ne sera pas subdivisé avant 1789.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            L'entreprise semble totalement contre-intuitive : appliquer un système pensé pour des cités romaines hyper denses à des forêts immenses et sauvages. Et pourtant, face à un territoire aussi démesuré, cette rigidité hiérarchique était précisément ce dont la Nouvelle-France avait besoin pour maintenir un contrôle administratif et social.
+                        </p>
+                    </section>
+
+                    <!-- Section 2 : Le boom du XIXe siècle -->
+                    <section class="space-y-4">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Le boom du XIXe siècle et l'architecture invisible du Québec</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Le véritable épreuve de force de cette « franchise » romaine survient dans la seconde moitié du XIXe siècle, au moment où le Québec connaît une forte croissance démographique. Pour encadrer cette population en expansion, la structure diocésienne révèle un pragmatisme exceptionnel : elle déborde largement le cadre strictement religieux pour devenir l'architecture invisible de la société.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            D'un point de vue logistique, construire un réseau complet de succursales à travers un territoire en développement coûte cher. Or, le réseau paroissial offrait une infrastructure clé en main :
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 text-stone-700 text-base">
+                            <li>Le curé était souvent la personne la plus instruite du village.</li>
+                            <li>L'Église tenait le seul registre fiable de la population.</li>
+                            <li>Il existait déjà un réseau de communication instantané basé sur un climat de confiance bien établi.</li>
+                        </ul>
+                        <p class="text-content text-stone-700 text-base leading-relaxed mt-4">
+                            C'est pourquoi une multitude d'organisations civiles, économiques et sociales ont simplement adopté la carte religieuse. Elles se sont directement calquées sur les frontières des diocèses :
+                        </p>
+                        
+                        <!-- Tableau des institutions -->
+                        <div class="overflow-x-auto my-4">
+                            <table class="w-full text-left border-collapse border border-stone-300 text-sm">
+                                <thead class="bg-[#f4f2eb] text-stone-900">
+                                    <tr>
+                                        <th class="border border-stone-300 p-3 font-semibold">Institution</th>
+                                        <th class="border border-stone-300 p-3 font-semibold">Secteur d'activité</th>
+                                        <th class="border border-stone-300 p-3 font-semibold">Ancrage territorial</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-stone-700">
+                                    <tr class="bg-white">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Caisses populaires Desjardins</td>
+                                        <td class="border border-stone-300 p-3">Réseau bancaire et coopératif</td>
+                                        <td class="border border-stone-300 p-3">Paroissial et diocésain</td>
+                                    </tr>
+                                    <tr class="bg-[#fcfbf9]">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Union catholique des cultivateurs (UCC)</td>
+                                        <td class="border border-stone-300 p-3">Monde agricole</td>
+                                        <td class="border border-stone-300 p-3">Réseau régional et diocésain</td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Confédération des travailleurs catholiques du Canada (CTCC)</td>
+                                        <td class="border border-stone-300 p-3">Mouvement syndical</td>
+                                        <td class="border border-stone-300 p-3">Centres urbains et diocèses</td>
+                                    </tr>
+                                    <tr class="bg-[#fcfbf9]">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Sociétés de colonisation & petits séminaires</td>
+                                        <td class="border border-stone-300 p-3">Développement régional et éducation</td>
+                                        <td class="border border-stone-300 p-3">Expansion territoriale</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Comme le souligne le sociologue Fernand Harvey, le diocèse ne représentait pas seulement une ligne entre deux clochers, mais bien le squelette même de l'aménagement du territoire québécois.
+                        </p>
+                    </section>
+
+                    <!-- Section 3 : L'angle mort sociologique -->
+                    <section class="space-y-4">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">L'angle mort sociologique : Pourquoi cet héritage a-t-il été oublié ?</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Si la structure diocésienne a été le moteur de toutes nos grandes institutions, pourquoi les chercheurs l'ont-ils ignorée pendant si longtemps ? C'est le cœur de la démonstration de Fernand Harvey : cet oubli découle d'un rendez-vous manqué entre l'histoire religieuse et l'histoire régionale.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Dans les années 1950 et 1960, la sociologie religieuse au Québec était fortement influencée par le sociologue français Gabriel Le Bras. L'objectif principal de ces recherches n'était pas de faire de l'histoire socio-économique, mais de faire de la pastorale : on étudiait la religion sur le terrain pour aider l'Église à se moderniser de l'intérieur, en pleine période de réformes liées au Concile Vatican II.
+                        </p>
+                        
+                        <div class="bg-amber-50 border-l-4 border-amber-800 p-5 rounded-r my-6">
+                            <p class="text-stone-800 italic font-serif text-sm">
+                                « Ignorer le rôle du diocèse pour comprendre l'économie du Québec revient à essayer de comprendre la dynamique économique d'une grande métropole en ignorant complètement l'existence de son réseau d'autoroutes. »
+                            </p>
+                            <span class="block text-right text-xs font-bold text-amber-900 mt-2">— Fernand Harvey</span>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- CONTENU MODULAIRE ASSOCIÉ : "Les frontières géographiques des diocèses" -->
+                <div id="view-diocese-assoc-frontieres" class="hidden space-y-8 bg-white border border-stone-300 rounded-lg p-8 md:p-12 shadow-sm">
+                    <div class="border-b border-stone-300 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-amber-800 font-bold block mb-2">Étude géopolitique et territoriale (Article Associé)</span>
+                            <h2 class="text-3xl font-bold text-stone-900 tracking-tight">Les frontières géographiques des diocèses</h2>
+                            <p class="text-sm text-stone-500 mt-2 italic">Découpage ecclésiastique et structuration de l'espace québécois</p>
+                        </div>
+                        
+                        <!-- Lecteur audio intégré -->
+                        <div class="bg-[#f4f2eb] border border-stone-300 rounded-md p-3 shadow-2xs space-y-1.5 w-full md:w-80 shrink-0">
+                            <div class="flex items-center space-x-2 text-amber-800">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path>
+                                </svg>
+                                <span class="text-[11px] font-semibold uppercase tracking-wider">Exposé audio synchronisé</span>
+                            </div>
+                            <div>
+                                <audio id="audioPlayerDioceseFrontieres" controls class="w-full h-8 accent-amber-700">
+                                    <source src="https://raw.githubusercontent.com/sociocamera/eglises/audio/diocese02.m4a" type="audio/mp4">
+                                    Votre navigateur ne supporte pas l'élément audio.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ZONE DU DIAPORAMA SYNCHRONISÉ POUR LES FRONTIÈRES (ID unique dédié) -->
+                    <div id="synced-slide-container-frontieres" class="my-6 bg-white border border-stone-300 rounded-lg p-4 shadow-2xs hidden flex flex-col items-center space-y-3">
+                        <div class="w-full flex justify-between items-center border-b border-stone-200 pb-2">
+                            <h4 id="audio-slide-title-frontieres" class="text-xs font-bold uppercase tracking-wider text-amber-800">Diapositive synchronisée</h4>
+                            <span class="text-[10px] bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-medium">Synchro active</span>
+                        </div>
+                        <div class="w-full bg-[#f9f8f6] rounded border border-stone-300 flex justify-center p-2">
+                            <img id="audio-slide-img-frontieres" src="" alt="Diapositive de l'exposé audio" class="max-h-[380px] object-contain rounded shadow-xs cursor-pointer hover:opacity-95 transition" onclick="openSlideModalFromElement('audio-slide-img-frontieres', 'audio-slide-title-frontieres')" title="Cliquer pour agrandir la diapositive">
+                        </div>
+                    </div>
+
+                    <!-- --- CONTENEUR DES SOUS-ARTICLES (Lié au maître : sub-articles-container-frontieres) --- -->
+                    <div id="sub-articles-container-frontieres" class="sub-articles-slider-container my-6 p-4 bg-[#f4f2eb] border border-stone-300 rounded-lg shadow-2xs">
+                        <!-- Injecté dynamiquement par JS -->
+                    </div>
+
+                    <!-- Essai rigoureux, factuel et académique sans puces de forme -->
+                    <section class="space-y-6">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Introduction au découpage territorial</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Lorsqu'on examine la carte administrative du Québec contemporain avec un regard distancié, les régions administratives semblent obéir à une rationalité purement bureaucratique et laïque, modelée par des technocrates anonymes soucieux d'efficacité fonctionnelle. Pourtant, une plongée minutieuse dans l'épaisseur historique et sociale révèle que ces frontières plongent leurs racines dans un passé bien plus lointain, conflictuel et hautement stratégique (Harvey, 1999). L'épaisseur du phénomène territorial québécois est proprement vertigineuse lorsqu'on en remonte la genèse institutionnelle sous le Régime français, époque où le diocèse de Québec couvrait un territoire immensément vaste, englobant pratiquement toute l'Amérique du Nord, témoignant d'une ambition spirituelle et politique sans équivoque. Ce cadre territorial initial n'était point neutre ; il constituait une armature géopolitique où le spirituel et le temporel s'entremêlaient étroitement pour régir les âmes et baliser les possessions impériales.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Les premières grandes fractures de cet espace unifié furent éminemment politiques, à l'instar de la création du diocèse de Baltimore en 1789, qui vint acter la naissance d'une nouvelle frontière géopolitique avec les États-Unis nouvellement indépendants, redéfinissant par la force des choses les sphères d'influence transfrontalières. À mesure que le XIXe siècle avance, et plus particulièrement entre 1847 et 1913, le Québec assiste à une prolifération massive et stratégique de nouveaux diocèses. L'analyse fine des travaux du sociologue Fernand Harvey, notamment ses écrits fondateurs consacrés au diocèse catholique comme cadre territorial de l'histoire sociale, met en lumière une réalité fascinante : ces découpages successifs fonctionnaient moins comme de simples réaménagements pastoraux de proximité que comme de véritables armes diplomatiques internes (Harvey, 1999). À l'instar des restructurations d'entreprises agressives menées par des conseils d'administration soucieux de neutraliser un concurrent encombrant, la hiérarchie catholique traçait, détruisait et redessinait les frontières pour affermir son emprise, gérer les rivalités d'influence et mater les velléités d'autonomie régionale.
+                        </p>
+                    </section>
+
+                    <section class="space-y-6">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Le cas de Trois-Rivières et le choc de l'ultramontanisme</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Cette dynamique d'ingénierie territoriale s'observe avec une clarté remarquable à travers les soubresauts de la géographie ecclésiastique régionale. L'exemple de la scission et de l'histoire du diocèse de Trois-Rivières en offre une illustration parfaite avec l'amputation ciblée de sa partie sud, motivée par un conflit idéologique profond avec l'évêque local, Monseigneur Louis-François Laflèche. Ce dernier, figure de proue de l'ultramontanisme le plus intransigeant et fervent partisan d'une suprématie ecclésiale absolue où le Pape détenait une autorité inattaquable même sur l'État, heurtait profondément les sensibilités des élites plus modérées et libérales de la province, y compris au sein même de la haute hiérarchie ecclésiastique de Québec (Laflèche, 1883). Pour affaiblir cet adversaire jugé trop radical et encombrant pour l'équilibre des pouvoirs, la haute instance n'hésita pas à redessiner littéralement la carte, réduisant l'assiette territoriale du diocèse trifluvien et limitant son ascendant politique par une manœuvre de contournement classique.
+                        </p>
+
+                        <!-- Encadré de citation -->
+                        <div class="bg-amber-50 border-l-4 border-amber-800 p-5 rounded-r my-6">
+                            <p class="text-stone-800 italic font-serif text-sm">
+                                « L'élévation au statut d'archidiocèse et les redécoupages constants n'étaient pas de simples formalités liturgiques, mais des paris institutionnels à long terme visant à placer l'Église au cœur des futurs bassins de pouvoir économique. »
+                            </p>
+                            <span class="block text-right text-xs font-bold text-amber-900 mt-2">— Fernand Harvey (1999)</span>
+                        </div>
+
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            On assiste ainsi à des stratégies similaires à Montréal, où l'élévation au statut d'archidiocèse constitua une manœuvre habile pour apaiser des tensions politiques latentes avec Québec, tout en réglant un dossier épineux qui traînait en longueur : le droit de fonder une université autonome dans la métropole. Ces grands centres urbains bien quadrillés ne doivent pas occulter pour autant la complexité des stratégies déployées dans les zones périphériques et les marges industrielles naissantes de la province.
+                        </p>
+                    </section>
+
+                    <section class="space-y-6">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Le pari d'Hauterive et le refus des company towns</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Un calcul géopolitique analogue se produit sur la Côte-Nord en 1945. Lorsque Monseigneur Napoléon-Aubert Labrie doit établir le siège du nouveau vicariat puis diocèse du Golfe-Saint-Laurent, il se trouve confronté à l'essor foudroyant de Baie-Comeau, métropole industrielle en pleine expansion. Pourtant, le prélat refuse obstinément de s'y installer. Pourquoi ? Parce que Baie-Comeau était alors une <em>company town</em> par excellence, une ville fermée, planifiée et contrôlée de A à Z par des intérêts corporatifs et financiers anglophones. Conscient que l'Église y serait inévitablement subordonnée aux impératifs du capital industriel et au diktat patronal, Monseigneur Labrie choisit de fonder son siège un peu plus loin, à Hauterive, s'assurant ainsi d'ériger un bastion institutionnel francophone totalement indépendant et maître de ses orientations spirituelles.
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Cette même logique d'évitement des cités industrielles corporatives se manifeste sur la Côte-Nord de façon éclatante. Les autorités ecclésiastiques savaient pertinemment que s'installer au cœur des enclaves capitalistes équivalait à aliéner leur autonomie d'action pastorale. En choisissant des emplacements adjacents mais souverains, l'appareil diocésain maintenait un contre-pouvoir territorial capable de dialoguer d'égal à égal avec les titans de l'industrialisation minière et papetière.
+                        </p>
+                    </section>
+
+                    <section class="space-y-6">
+                        <h3 class="text-xl font-bold text-stone-900 border-l-4 border-amber-700 pl-3">Saint-Jérôme (1951) et le tournant empirique</h3>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            Face à l'essoufflement manifeste du vieux modèle rural et paroissial traditionnel, la création du diocèse de Saint-Jérôme en 1951 marque une rupture épistémologique et stratégique sans équivoque (Martin, 1973). Son premier évêque, Monseigneur Émile Frenette, sent confusément que le vieux modèle s'essouffle et que la pratique religieuse risque de s'effondrer sous les coups de boutoir de l'urbanisation galopante. Plutôt que de se replier frileusement sur le dogme, il pose un geste d'une audace remarquable pour l'époque : il fait appel à des sociologues laïcs de renom, Fernand Dumont et Yves Martin, pour mener une vaste enquête scientifique et sociologique sur les bouleversements socioculturels en cours (Dumont, 1968).
+                        </p>
+                        <p class="text-content text-stone-700 text-base leading-relaxed">
+                            L'image est saisissante : l'Église, traditionnellement donneuse de leçons morales, commande des outils d'analyse et des enquêtes de terrain pour comprendre pourquoi elle perd des parts de marché spirituel auprès du nouveau prolétariat ouvrier. Au fond, l'analyse exhaustive de Fernand Harvey démontre que l'évolution de ces diocèses constitue le véritable squelette souterrain de l'histoire régionale du Québec (Harvey, 1999). Si la Révolution tranquille des années 1960 a en apparence transféré la prise en charge des hôpitaux, des écoles et des services sociaux à l'État, effaçant en surface le pouvoir clérical, la question de fond demeure entière. Jusqu'à quel point notre découpage administratif laïque contemporain est-il encore secrètement dicté par la persistance de ces anciennes frontières spirituelles ? C'est là toute la complexité d'un territoire façonné par des décennies de diplomatie pastorale.
+                        </p>
+                    </section>
+
+                    <!-- Tableau thématique -->
+                    <section class="space-y-4 my-6">
+                        <h4 class="text-xs uppercase tracking-wider text-amber-800 font-bold">Tableau thématique : Stratégies territoriales et diocésaines au Québec</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse border border-stone-300 text-sm">
+                                <thead class="bg-[#f4f2eb] text-stone-900">
+                                    <tr>
+                                        <th class="border border-stone-300 p-3 font-semibold">Diocèse / Territoire</th>
+                                        <th class="border border-stone-300 p-3 font-semibold">Période / Enjeu historique</th>
+                                        <th class="border border-stone-300 p-3 font-semibold">Stratégie géopolitique et institutionnelle</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-stone-700">
+                                    <tr class="bg-white">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Diocèse de Québec (Origine)</td>
+                                        <td class="border border-stone-300 p-3">Régime français / Immensité continentale</td>
+                                        <td class="border border-stone-300 p-3">Armature géopolitique unifiée régissant le spirituel et le temporel sur toute l'Amérique du Nord.</td>
+                                    </tr>
+                                    <tr class="bg-[#fcfbf9]">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Trois-Rivières</td>
+                                        <td class="border border-stone-300 p-3">XIXe siècle / Contre l'ultramontanisme de Mgr Laflèche</td>
+                                        <td class="border border-stone-300 p-3">Amputation territoriale ciblée pour affaiblir l'influence politique de l'évêque radical.</td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Hauterive (Côte-Nord)</td>
+                                        <td class="border border-stone-300 p-3">1945 / Expansion industrielle et minière</td>
+                                        <td class="border border-stone-300 p-3">Refus de s'implanter dans la <em>company town</em> de Baie-Comeau pour préserver l'autonomie ecclésiale face au capitalisme anglophone.</td>
+                                    </tr>
+                                    <tr class="bg-[#fcfbf9]">
+                                        <td class="border border-stone-300 p-3 font-medium text-stone-900">Saint-Jérôme</td>
+                                        <td class="border border-stone-300 p-3">1951 / Urbanisation et essoufflement rural</td>
+                                        <td class="border border-stone-300 p-3">Tournant empirique : recours aux sociologues laïcs (Dumont, Martin) pour analyser scientifiquement les mutations du milieu ouvrier.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Bibliographie au format APA -->
+                    <section class="references-section border-t border-stone-300 pt-6 mt-8">
+                        <h4 class="text-base font-bold text-stone-900 mb-3">Références bibliographiques (Normes APA)</h4>
+                        <ul class="space-y-3 text-stone-700 text-sm font-serif pl-0 list-none">
+                            <li class="pl-8 -indent-8">Dumont, F. (1968). <em>Le lieu de l'homme : la culture comme distance et comme mémoire</em>. Éditions Hurtubise HMH.</li>
+                            <li class="pl-8 -indent-8">Harvey, F. (1999). Le diocèse catholique comme cadre territorial de l'histoire sociale au Québec. <em>Les Cahiers des dix</em>, , (56), 51–124.</li>
+                            <li class="pl-8 -indent-8">Laflèche, L.-F. (1883). <em>Quelques considérations sur les rapports de la société civile avec la religion et la famille</em>. Montréal : Eusèbe Sénécal.</li>
+                            <li class="pl-8 -indent-8">Dumont, F. et Martin, Y. (1963). <em>L’analyse des structures sociales régionales. Étude sociologique de la région de Saint-Jérôme</em>. Les Presses de l'Université Laval.</li>
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- CONTENU MASQUÉ : Source (Intégration Google Drive) -->
+                <div id="view-source" class="hidden space-y-4 bg-white border border-stone-300 rounded-lg p-8 md:p-12 shadow-sm">
+                    <div class="border-b border-stone-200 pb-4">
+                        <span class="text-xs uppercase tracking-widest text-amber-800 font-semibold">Référence documentaire</span>
+                        <h3 class="text-2xl font-bold text-stone-900 mt-1">Source & Documents originaux</h3>
+                    </div>
+                    <div class="w-full bg-[#f9f8f6] rounded border border-stone-300 overflow-hidden" style="height: 75vh;">
+                        <iframe src="https://lh3.googleusercontent.com/d/14PhMgqIM0DM4DMJcWLQwHIfnYAkMAfkl/preview" width="100%" height="100%" style="border:none;"></iframe>
+                    </div>
+                </div>
+
+                <!-- CONTENU MASQUÉ : Vidéos (Intégration interactive style Netflix) -->
+                <div id="view-videos" class="hidden space-y-4 bg-white border border-stone-300 rounded-lg p-8 md:p-12 shadow-sm">
+                    <div class="border-b border-stone-200 pb-4">
+                        <span class="text-xs uppercase tracking-widest text-amber-800 font-semibold">Médiathèque</span>
+                        <h3 class="text-2xl font-bold text-stone-900 mt-1">Séquences Vidéo & Captations</h3>
+                    </div>
+                    
+                    <div class="netflix-content-split">
+                        <div class="netflix-main-player" id="playerWrapper">
+                            <div class="video-poster-overlay" onclick="launchVideoFromCurrent()">
+                                <div class="play-button-ring">
+                                    <svg class="w-8 h-8 text-white translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-white text-sm font-medium mt-4 tracking-wide z-11">Lancer la lecture de la capsule</span>
+                            </div>
+                        </div>
+                        <div class="netflix-synopsis-pane">
+                            <div class="netflix-synopsis-tag">Synopsis de la capsule</div>
+                            <div class="netflix-synopsis-heading" id="synopsisHeading">L'empreinte du diocèse romain au Québec</div>
+                            <div class="netflix-synopsis-text" id="synopsisText">En retraçant le passage du modèle administratif romain aux structures ecclésiastiques de la Nouvelle-France, la captation illustre comment les frontières ecclésiastiques ont structuré en profondeur le développement économique et social du Québec moderne.</div>
+                        </div>
+                    </div>
+
+                    <!-- Slider Netflix de la playlist -->
+                    <div class="netflix-slider-container">
+                        <div class="netflix-slider-title">Séries de capsules documentaires</div>
+                        <div class="netflix-thumbnails-track" id="netflixThumbnailsTrack">
+                            <!-- Généré dynamiquement par JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENU MASQUÉ : Affichage dynamique des slides -->
+                <div id="view-slide" class="hidden flex flex-col items-center space-y-4 bg-white border border-stone-300 rounded-lg p-8 md:p-12 shadow-sm">
+                    <div class="w-full flex justify-between items-center border-b border-stone-200 pb-3">
+                        <h3 id="slide-title" class="text-lg font-bold text-stone-900">Diapositive</h3>
+                        <span class="text-xs bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-1 rounded font-medium">Synchronisation audio active</span>
+                    </div>
+                    <div class="w-full bg-[#f9f8f6] rounded border border-stone-300 flex justify-center p-3">
+                        <img id="slide-img" src="" alt="Diapositive" class="max-h-[65vh] object-contain rounded shadow-xs cursor-pointer hover:opacity-95 transition" onclick="openSlideModalFromElement('slide-img', 'slide-title')" title="Cliquer pour agrandir la diapositive">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FENÊTRE MODALE : À PROPOS DE PIERRE FRASER -->
+    <div id="aboutModal" class="fixed inset-0 bg-stone-950/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-3xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+            <div class="md:w-5/12 bg-stone-900 p-6 flex flex-col items-center justify-center text-center relative">
+                <img src="https://lh3.googleusercontent.com/d/1M8RUjR6K9rK-dvPF6ZwI-1intcwLz_q1" alt="Pierre Fraser" class="rounded object-cover max-h-[320px] shadow-md w-full mb-4">
+                <p class="text-stone-200 text-xs font-serif italic leading-relaxed">Pierre Fraser (sociologue et linguiste) Directeur et réalisateur du projet</p>
+            </div>
+            <div class="md:w-7/12 p-8 flex flex-col justify-between space-y-4">
+                <div>
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block">Notice biographique</span>
+                            <h3 class="text-xl font-bold text-stone-900">Pierre Fraser (PhD)</h3>
+                        </div>
+                        <button onclick="closeAboutModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="text-xs text-stone-600 leading-relaxed space-y-3 font-serif">
+                        <p>Sociologue, linguiste et cinéaste indépendant né à Chicoutimi en 1955, Pierre Fraser obtient un doctorat en sociologie de l'Université Laval en 2015, couronnant un parcours marqué par l'exploration des structures symboliques du pouvoir et de la corporalité.</p>
+                        <p>Également essayiste et directeur de publications au sein de structures telles que la « Revue Sociologie Visuelle », il consacre son œuvre à l'analyse critique des transformations sociales contemporaines, s'inscrivant ainsi dans la filiation des théoriciens de la modernité. </p>
+                        <p>En tant que documentariste, il mobilise la sociologie visuelle pour interroger la mémoire collective, la représentation du corps à travers les siècles, le patrimoine et l'espace urbain à travers des séries et des portails de recherche rigoureux.</p>
+                        <p>Alliant l'exigence de la recherche universitaire à l'agilité de l'édition numérique indépendante, son travail déploie une réflexion incisive sur les vulnérabilités sociales et les impasses de notre époque.</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-stone-200 flex justify-end">
+                    <button onclick="closeAboutModal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <main class="content-container" id="seasons-container"></main>
+    <!-- FENÊTRE MODALE : À PROPOS DE CE PROJET -->
+    <div id="aboutProjectModal" class="fixed inset-0 bg-stone-950/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-2xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+            <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-[#f4f2eb]">
+                <div>
+                    <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block">Dossier documentaire</span>
+                    <h3 class="text-xl font-bold text-stone-900">À propos de ce projet</h3>
+                </div>
+                <button onclick="closeAboutProjectModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 md:p-8 space-y-4 max-h-[70vh] overflow-y-auto text-stone-700 text-sm leading-relaxed font-serif">
+                <h4 class="font-sans font-bold text-base text-stone-900 mb-2">Présentation sommaire</h4>
+                <p>Le projet documentaire <em>Requiem pour une église</em>, conçu par Louis-René Dumoulin et réalisé par le sociologue Pierre Fraser, propose une réflexion approfondie sur la transformation et la disparition graduelle du patrimoine religieux au Québec. Loin de se limiter à une simple nostalgie architecturale, l'œuvre s'attarde à documenter la mutation sociologique et culturelle des communautés qui, au rythme de la laïcisation et du désinvestissement des paroisses, voient leurs lieux de culte fermer, être démolis ou trouver de nouvelles fonctions profanes.</p>
+                <p>En combinant l'analyse sociologique et une sensibilité artistique propre au médium photographique et vidéographique, la démarche cherche à interroger le sens de ces espaces d'ancrage collectif. Ce questionnement trouve un écho dans les travaux de recherche en sciences sociales, notamment ceux explorant l'évolution des identités symboliques et du territoire.</p>
+                <p>À travers l'examen de cas singuliers, le film met en lumière les tensions entre la sauvegarde d'une mémoire collective et la dure réalité financière de la gestion immobilière de ces bâtiments patrimoniaux.</p>
+                <p>La structure narrative alterne entre la description factuelle des crises locales et une dimension essayistique plus large, interrogeant le devenir du « sacré » dans une société sécularisée.</p>
+            </div>
 
-  <!-- Lecteur Modal Google Drive avec Texte et Synopsis -->
-  <div class="modal" id="videoModal">
-    <div class="modal-content" id="modalContentWrapper">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <div class="modal-video-container" id="modalVideoContainer">
-        <iframe id="drivePlayer" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
-      <div class="modal-text-container" id="modalTextContainer">
-        <h3 id="modalEpisodeTitle">Extrait de la thèse</h3>
-        <p id="modalEpisodeText">Chargement de l'extrait...</p>
-      </div>
+            <div class="p-4 border-t border-stone-200 bg-[#f9f8f6] flex justify-end">
+                <button onclick="closeAboutProjectModal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // URL de votre Web App Google Apps Script configurée
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIDtNdLd8FLJGF8GQR7GNvhMS3UNd3Oub1FEbvpWRHEm7nwqQWoEjp-wZ3ZGtB_UUV/exec";
+    <!-- FENÊTRE MODALE : VISIONNER LA PRÉSENTATION -->
+    <div id="presentationModal" class="fixed inset-0 bg-stone-950/85 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-black border border-stone-800 rounded-lg max-w-4xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+            <div class="p-4 border-b border-stone-300 flex justify-between items-center bg-[#f4f2eb] text-stone-800">
+                <div class="flex items-center space-x-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-amber-700"></span>
+                    <h3 class="text-sm font-semibold tracking-wide">Requiem pour une église — Présentation vidéo</h3>
+                </div>
+                <button onclick="closePresentationModal()" class="text-stone-600 hover:text-stone-900 p-1 rounded transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="w-full bg-black aspect-video relative flex items-center justify-center" id="presentationVideoContainer">
+            </div>
+        </div>
+    </div>
 
-    function logEvent(type, theme, videoTitle) {
-      if (!APPS_SCRIPT_URL) return;
-      
-      const payload = {
-        type: type,
-        theme: theme,
-        video: videoTitle || ''
-      };
+    <!-- FENÊTRE MODALE : VOTRE PROPOSITION DE TOURNAGE -->
+    <div id="tournageModal" class="fixed inset-0 bg-stone-950/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-3xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col md:flex-row">
+            <div class="md:w-5/12 bg-stone-900 p-6 flex flex-col items-center justify-center text-center relative">
+                <img src="https://lh3.googleusercontent.com/d/1M8RUjR6K9rK-dvPF6ZwI-1intcwLz_q1" alt="Pierre Fraser" class="rounded object-cover max-h-[320px] shadow-md w-full mb-4">
+                <p class="text-stone-200 text-xs font-serif italic leading-relaxed">Pierre Fraser (sociologue et linguiste) Directeur et réalisateur du projet</p>
+            </div>
+            <div class="md:w-7/12 p-8 flex flex-col justify-between space-y-4">
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block">Collaboration</span>
+                            <h3 class="text-xl font-bold text-stone-900">Participez ou collaborez au projet</h3>
+                        </div>
+                        <button onclick="closeTournageModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="text-xs text-stone-700 leading-relaxed space-y-3 font-serif">
+                        <p>Vous souhaitez nous soumettre une proposition de tournage, planifier une entrevue ou proposer un article en lien avec le patrimoine et la transformation des églises ?</p>
+                        <p>Notre équipe accueille avec grand intérêt les initiatives citoyennes, les témoignages de terrain et les analyses documentaires inédites.</p>
+                        <div class="pt-2 font-sans">
+                            <span class="font-semibold text-stone-900 block mb-1">Pour nous joindre :</span>
+                            <p class="text-stone-600 text-xs mb-1">Veuillez adresser votre proposition directement par courrier électronique à l'adresse suivante :</p>
+                            <a href="mailto:sociocamera@gmail.com" class="inline-block text-xs font-semibold text-amber-700 hover:underline bg-amber-50 border border-amber-200 px-3 py-1.5 rounded">sociocamera@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
 
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      }).catch(err => console.error("Erreur de suivi :", err));
-    }
+                <div class="pt-4 border-t border-stone-200 flex justify-end">
+                    <button onclick="closeTournageModal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    window.addEventListener('load', () => {
-      logEvent('Ouverture de page', 'Accueil', '');
-    });
+    <!-- FENÊTRE MODALE : ÉTAT D'AVANCEMENT (PHASE III) -->
+    <div id="phase3Modal" class="fixed inset-0 bg-stone-950/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-2xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+            <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-[#f4f2eb]">
+                <div>
+                    <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block">Suivi méthodologique</span>
+                    <h3 class="text-xl font-bold text-stone-900">État d'avancement : Phase III — Analyse d'archives</h3>
+                </div>
+                <button onclick="closePhase3Modal()" class="text-stone-400 hover:text-stone-700 p-1 rounded transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 md:p-8 space-y-4 max-h-[70vh] overflow-y-auto text-stone-700 text-sm leading-relaxed font-serif">
+                <div class="font-sans text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded mb-4 inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span id="autoTimestampPhase3">En date du ...</span>
+                </div>
 
-    const testVideoFileId = "1bf1izrxofAyoAsUn7g-QclbvITF_eT6B";
-    const testThumbnailFileId = "1h1-0I2aDyNVCTMySTTFNsr9W9dF8rL3j";
+                <p>La Phase III du projet « Requiem pour une église » est actuellement consacrée à l'examen approfondi des archives paroissiales, municipales et diocésaines. Cette étape méthodologique cruciale permet de croiser les données démographiques et financières avec l'histoire architecturale de chaque édifice répertorié.</p>
 
-    const defaultThesisSynopsis = "L'aventure du corps humain se dévoile à travers une exploration saisissante des représentations et des régulations corporelles au fil des siècles. De la Renaissance à notre époque contemporaine, cette série documentaire interroge les normes, les contraintes et les métamorphoses d'une anatomie sans cesse redéfinie par la culture et le pouvoir. En scrutant les marges de l'intime et les carcans sociaux, chaque épisode dissèque la manière dont la chair devient le réceptacle des idéaux collectifs. Une plongée rigoureuse et nécessaire au cœur de notre condition charnelle, invitant à repenser les frontières invisibles qui façonnent notre identité physique d'hier à aujourd'hui.";
+                <h4 class="font-sans font-bold text-base text-stone-900 pt-2 mb-2">Ajouts récents</h4>
+                <ul class="list-disc pl-5 space-y-2 text-stone-700">
+                    <li>Article Diocèse : <em>Les frontières géographiques des diocèses</em></li>
+                </ul>
+                
+                <h4 class="font-sans font-bold text-base text-stone-900 pt-2 mb-2">Principaux chantiers en cours :</h4>
+                <ul class="list-disc pl-5 space-y-2 text-stone-700">
+                    <li>Numérisation et catalogage des plans architecturaux historiques et des décrets de désacralisation.</li>
+                    <li>Transcription des entretiens sociologiques menés auprès des intervenants locaux, des membres des fabriques et des citoyens engagés.</li>
+                    <li>Évaluation croisée de la viabilité des projets de requalification civique par rapport aux pressions de la spéculation immobilière.</li>
+                </ul>
 
-    const seasons = [
-      {
-        id: "s1",
-        title: "Renaissance",
-        episodes: [
-          { 
-            id: 1, 
-            title: "Bande-annonce", 
-            duration: "01:19", 
-            fileId: testVideoFileId, 
-            imageId: testThumbnailFileId,
-            synopsis: defaultThesisSynopsis
-          },
-          { 
-            id: 2, 
-            title: "La quête sans fin du corps idéal", 
-            duration: "03:01", 
-            fileId: "17G6wuC30ehVZInCTwM9X7Ye9v5_ZkKj8", 
-            imageId: "1vrQ1YyGwTnDlL8d0iDg-R-LuaRIpCpEm",
-            synopsis: "La quête du corps idéal est un chantier perpétuel hérité de la Renaissance. Sous l'impulsion du peintre Alberti, du médecin Vésale et de l'éducateur Mercurialis, le corps est passé d'une création divine intouchable à une mécanique mesurable, réparable et modifiable. Aujourd'hui, cette démarche dépasse le simple choix individuel pour devenir une véritable injonction sociale et morale orchestrée par la médecine et les médias. En croyant façonner notre identité profonde, nous soumettons notre enveloppe à une vaste entreprise de conformité, posant la question du devenir de notre identité face aux technologies futures."
-          },
-          { 
-            id: 3, 
-            title: "Qui a décidé ce qu'était un corps idéal ?", 
-            duration: "03:38", 
-            fileId: "1O4yFB9PAvAOBtINsw0hJjRo_E4XF7AA-", 
-            imageId: "1ASKoWbuGsmPRIXwU1dHndhAQUiyeTWfg",
-            synopsis: "L’obsession contemporaine pour le fitness prend sa source à la Renaissance italienne. Dès 1432, le peintre Leon Battista Alberti affirme que l’exercice physique conserve la santé, la jeunesse et la beauté. En théorisant les « justes proportions » du corps, il transforme la maîtrise physique en un signe de vertu morale et de distinction sociale."
-          },
-          { 
-            id: 4, 
-            title: "Qu'est-ce qu'un corps en santé ?", 
-            duration: "04:52", 
-            fileId: "1QveU67l_HQr2o8E3ZQkozShXckbA8a5f", 
-            imageId: "1Ee4EZJblMOyUuSTNhv-ZOqZMFoV-1Czb",
-            synopsis: "À la Renaissance, le corps humain est pensé comme un microcosme  : un miroir de l'univers traversé par l'empreinte des astres  et l'équilibre des quatre éléments . Dans cette vision mi-animiste, mi-chrétienne , ce frêle « sac d'os »  subit la maladie non comme une panne mécanique, mais comme un déséquilibre cosmique ou moral. Restaurer la santé exige la médiation de la nature — plantes, boues et métaux  — pour réaligner la matière humaine avec le monde. Loin de notre médecine moderne compartimentée, la santé était l'art de maintenir une harmonie absolue entre la terre et le ciel."
-          },
-          { 
-            id: 5, 
-            title: "Un corps robuste et résistant", 
-            duration: "04:26", 
-            fileId: "1x_Lzo4GqoK-y2eNksJamAOGlPlHSuNl_", 
-            imageId: "1g6pJflaYVXDUSf2AbctZObjdovLXXcsW",
-            synopsis: "Cette vidéo transporte l’analyse de la condition physique au cœur de la Renaissance, une période charnière où l’humanisme redéfinit la place du corps. L’art et la science de cette époque prônent l’harmonie entre l’esprit et la matière, réhabilitant l’exercice physique, l’hygiène de vie et la robustesse anatomique comme fondements indispensables de l’épanouissement humain."
-          },
-          { 
-            id: 6, 
-            title: "Exercice ou médicaments ?", 
-            duration: "04:00", 
-            fileId: "1RdeVhwhUw2Ktp0Ex6VcmqBMv41nrWkia", 
-            imageId: "1zGfwMLi-TzWAXh1MAkQg08w8dthYgQam",
-            synopsis: "Loin d'être une innovation moderne, le sport sur ordonnance remonte au XVIᵉ siècle. Avec l'avènement de l'humanisme, la médecine abandonne la vision fataliste du corps pour le concevoir comme une mécanique à ajuster préventivement par le mouvement. Des médecins comme Laurence Joubert et Mercurialis (De Arte Gymnastica, 1569) répertorient les exercices, prônant l'exercice plutôt que le médicament. Mercurialis distingue nettement la gymnastique médicale de la recherche de performance militaire. Concevant le corps comme un organisme en devenir constant, ces savants ont posé les bases de la prévention santé moderne par l'activité physique."
-          },
-          { 
-            id: 7, 
-            title: "Obésité ou manque de volonté ?", 
-            duration: "03:00", 
-            fileId: "1S9sokGbXj9cyMOBRoy4EVCzHH6d9k1nB", 
-            imageId: "1psPN0oFov60FZeSprfZYwEJjYfVjTXaX",
-            synopsis: "Le rejet actuel de l'obésité et l'association du surpoids à un manque de volonté ne relèvent pas d'une science moderne neutre, mais trouvent leurs racines au XVIe siècle. À cette époque, le médecin Laurent Joubert a posé les bases d'un discours moralisateur liant l'activité physique à la santé, qualifiant péjorativement la graisse superflue. Cette vision a rapidement fusionné avec la physionomie, une pseudoscience qui associait l'embonpoint à des vices moraux comme la gourmandise et la luxure."
-          },
-          { 
-            id: 8, 
-            title: "Prôner la retenue alimentaire", 
-            duration: "04:45", 
-            fileId: "1uEFgVqaAJRb9NRRmGw8jVcnX_YsYFs9e", 
-            imageId: "118YTv2K-EKvHBZ1dN9FW2INZaDXxvONF",
-            synopsis: "À la Renaissance, l'étude de la corpulence émerge à travers la convergence de l'art, des mathématiques et de la médecine. Le peintre Albrecht Dürer tente en vain d'appliquer le cercle de Vitruve pour analyser mathématiquement l'obésité, illustrant ainsi l'impossibilité de systématiser ce corps rebelle aux cadres géométriques. Face aux excès de l'élite aristocratique souffrant de goutte et d'apoplexie, les médecins prescrivent des régimes d'assèchement et de sobriété, bannissant paradoxalement les fruits et les légumes frais pour lutter contre l'humidité corporelle. Cette gestion de l'alimentation traduit une nette fracture sociale, s'opposant à la maigreur tragique du peuple associée aux famines et aux pestes."
-          },
-          { 
-            id: 9, 
-            title: "Le corps glorifié", 
-            duration: "03:31", 
-            fileId: "1-w1qwbOfYhEIa0lItcLSBvXil_D3InU4", 
-            imageId: "1Oxvr0S4BLP1fcvoAQUQfJTtiFEsYbxqY",
-            synopsis: "L'art de la Renaissance a transformé le corps humain en un véritable culte esthétique et philosophique. En s'inspirant de modèles antiques comme le Torse du Belvédère, des maîtres tels que Michel-Ange et Raphaël ont glorifié une anatomie ultra-musclée, reléguant la nature au second plan. Pour réussir cette illusion de volume tridimensionnel, les peintres ont dû maîtriser l'architecture interne des muscles et de la lumière. Cette quête a atteint son apogée avec l'Homme de Vitruve de Léonard de Vinci, qui symbolise l'humanisme en plaçant l'homme au centre de l'univers et comme mesure de toute chose. "
-          },
-          { 
-            id: 10, 
-            title: "Le corps et son statut social", 
-            duration: "03:16", 
-            fileId: "1eN03knS2dH7L2NUPGxDv19h9vNcQTaTX", 
-            imageId: "1YRAKTPfOaaRhODTqHe9lF2886t-gsNKy",
-            synopsis: "La Renaissance a profondément transformé la perception et la représentation du corps, ancrant les bases de nos diktats esthétiques modernes. À cette époque, la corpulence pouvait symboliser l'autorité et la richesse pour les classes dominantes, tandis que les progrès de la médecine anatomique ont révélé la chair comme une machine complexe que l'on pouvait enfin comprendre et modifier. Cet idéal du corps façonnable a rapidement creusé une fracture inégalitaire entre les genres, associant la puissance masculine à l'expansion musculaire et la valeur féminine à une stricte minceur. "
-          },
-        ]
-      },
-      {
-        id: "s2",
-        title: "Grand siècle",
-        notice: "En développement...",
-        episodes: [
-          { 
-            id: 1, 
-            title: "Bande-annonce", 
-            duration: "00:22", 
-            fileId: "1Whkqwb1tKX-VvFtYUj_2Vk7bZCOS2DW8", 
-            imageId: "1KnS2v3TPB17Zw2g1iwJGFPgOCxoSWAGR",
-            synopsis: "Durant le XVIIe siècle, une rupture ontologique a transformé la perception du corps humain, passant d'une connexion cosmique à une vision purement mécaniste et réductionniste. Cette transformation s'est concrétisée notamment grâce à la découverte de la circulation sanguine par William Harvey, qui a assimilé le corps à un agencement de pompes et de leviers. Parallèlement, l'éthique protestante a redéfini le rôle de la chair, imposant un corps laborieux voué au travail constant et à la maîtrise de soi pour prouver sa valeur divine. "
-          },
-          { 
-            id: 2, 
-            title: "La découverte de la circulation sanguine", 
-            duration: "02:18", 
-            fileId: "1MPiFxYyGDdoAu4rSwOpfQvCSINNWfVFQ", 
-            imageId: "1XBLmCf9lX0X8gS51UoDlyS2SvTgY7H5m",
-            synopsis: "Durant le XVIIe siècle, une rupture ontologique profonde a transformé la perception du corps humain, actant le passage d'une connexion cosmique et holistique à une vision purement mécaniste et réductionniste. Cette bascule épistémologique s'est concrétisée avec la découverte de la circulation sanguine par William Harvey en 1628 dans son traité Exercitatio Anatomica de Motu Cordis et Sanguinis in Animalibus, qui assimila le corps à un agencement de pompes et de leviers hydrauliques. "
-          },
-          { 
-            id: 3, 
-            title: "Condamner la paresse et l'oisiveté", 
-            duration: "05:49", 
-            fileId: "1KI35RBj4Q8z9LQKpnwcsLKX9dzEK_CEg", 
-            imageId: "1BJ_vICptwrBqCIHGO0-oGqozrghgtIkB",
-            synopsis: "L'analyse sociologique de Pierre Fraser démontre que la culpabilité liée au repos et l'obsession contemporaine de la productivité ne datent pas de l'ère numérique, mais trouvent leurs racines au XVIIe siècle avec la Réforme protestante. Contrairement au catholicisme qui considérait le corps comme un lieu de perdition, l'éthique protestante en a fait un instrument d'épanouissement personnel destiné à surmonter les angoisses existentielles face au salut. Cette vision a imposé une discipline rigoureuse articulée autour de la contenance de soi et de la gouvernance de soi, interdisant toute forme d'oisiveté ou d'inaction physique. "
-          },
-        ]
-      },
-      {
-        id: "s3",
-        title: "Siècle des Lumières",
-        notice: "Novembre 2026...",
-        episodes: [
-          { 
-            id: 1, 
-            title: "Bande-annonce", 
-            duration: "00:23", 
-            fileId: "136a4lm9Vlal0-e5ZSoJi9WJ-MQprB7XZ", 
-            imageId: "1CuVeSvyg7XbWzHVpjWEyAiBpmbvPUuru",
-            synopsis: "Ce dans quoi le Siècle des Lumières engage le corps, c’est dans un double mouvement : soumission et libération. Soumission, dans le sens où « tout se passe ici comme si le peuple allait chez le savant comme chez le devin et le magicien, qui sait ce qu’il en est des choses surnaturelles ; en effet, l’ignorant se fait du savant dont il espère quelque chose des représentations volontiers excessives. » Libération, dans le sens où le développement, l’entretien, l’alimentation et le soin du corps doivent dépendre totalement et intégralement de la volonté de l’individu et de son entendement."
-          },
-        ]
-      },
-      {
-        id: "s4",
-        title: "Révolution industrielle",
-        notice: "Décembre 2026...",
-        episodes: [
-          { 
-            id: 1, 
-            title: "Bande-annonce", 
-            duration: "00:23", 
-            fileId: "1npzN07I8vK3sYil88TvInSQnyFT1C1go", 
-            imageId: "168Hh6pEUEpSLMZ9jaPCuquRsF4h6_Tgu",
-            synopsis: "La représentation du corps au XIXe siècle constitue un carrefour anthropologique majeur où se renégocient les frontières entre la nature, la morale et la technique. Loin d'être une simple enveloppe anatomique neutre, le corps devient alors l'enjeu politique et symbolique d'une modernité naissante, tiraillée entre les rigueurs de l'industrialisation et les audaces du romantisme. Le corps n'est plus seulement discipliné ou contemplé dans sa morbidité ; il doit être redressé, fortifié et amélioré pour garantir la vitalité de la nation et de la race."
-          }
-        ]
-      },
-      {
-        id: "s5",
-        title: "Modernité",
-        duration: "00:23", 
-        notice: "Janvier 2027...",
-        episodes: [
-          { 
-            title: "Bande-annonce",
-            duration: "00:23", 
-            fileId: "1dPD_knop4Ig1eFhyYzC1s4MCFN1BpQLd", 
-            imageId: "18OKvo7nCszrEIMckzPLJc6D75uLGH6s5",
-            synopsis: "Avec le XXe siècle, le corps subit une mutation radicale, passant d'un simple instrument de production à un objet de consommation, d'exhibition et de surveillance biopolitique. Foucault démontre comment les institutions disciplinaires quadrillent l'enveloppe charnelle pour en maximiser la docilité et l'utilité économique. Parallèlement, l'émancipation des mœurs, les conquêtes féministes et l'explosion des industries culturelles redéfinissent la corporéité comme le lieu souverain de l'identité, de la jouissance et de l'expression individuelle."
-          }
-        ]
-      },
-      {
-        id: "s6",
-        title: "Aujourd'hui",
-        notice: "Février 2027...",
-        episodes: [
-          { 
-            title: "Bande-annonce",
-            duration: "00:23", 
-            fileId: "1vojGQwfUQ3owQttzv7sbuOchq3K6xyur", 
-            imageId: "19CKpIS7vgp3fdx3rq8u5GQbSnfAX0poQ",
-            synopsis: "Aujourd'hui, la représentation du corps se fragmente dans l'hyperconnectivité numérique, oscillant entre l'injonction performative à l'optimisation biométrique et la quête radicale d'inclusivité transgressive. Le corps n'est plus seulement un capital social ou un objet disciplinaire, il devient une interface fluide, sans cesse mise en scène, filtrée et réévaluée à l'ère des réseaux sociaux. Cette mutation comme doit être vue comme une intériorisation de la contrainte où le sujet performant s'exploite lui-même au nom de la liberté corporelle, de la santé connectée et de la jeunesse perpétuelle. "
-          }
-        ]
-      }
-    ];
+                <p class="pt-2">Cette phase analytique sert de socle empirique aux prochaines publications de vidéos et d'articles à paraître sur ce site.</p>
+            </div>
 
-    const container = document.getElementById('seasons-container');
+            <div class="p-4 border-t border-stone-200 bg-[#f9f8f6] flex justify-end">
+                <button onclick="closePhase3Modal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer</button>
+            </div>
+        </div>
+    </div>
 
-    function formatDuration(seconds) {
-      if (isNaN(seconds) || seconds <= 0) return "Durée inconnue";
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      if (mins === 0) {
-        return `${secs} s`;
-      }
-      return `${mins} min${secs > 0 ? ' ' + secs + ' s' : ''}`;
-    }
+    <!-- FENÊTRE MODALE : LISTE DES CONTRIBUTIONS -->
+    <div id="contributionsModal" class="fixed inset-0 bg-stone-950/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-2xl w-full overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200 flex flex-col">
+            <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-[#f4f2eb]">
+                <div>
+                    <span class="text-[11px] uppercase tracking-widest text-amber-800 font-bold block">Financement participatif</span>
+                    <h3 class="text-xl font-bold text-stone-900">Registre des contributions</h3>
+                </div>
+                <button onclick="closeContributionsModal()" class="text-stone-400 hover:text-stone-700 p-1 rounded transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 md:p-8 space-y-4 max-h-[70vh] overflow-y-auto text-stone-700 text-sm leading-relaxed font-serif">
+                <div class="font-sans text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded mb-4 inline-flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span id="autoTimestampContributions">En date du ...</span>
+                </div>
 
-    seasons.forEach((season) => {
-      const row = document.createElement('div');
-      row.className = 'season-row';
-      row.id = season.id;
+                <ul class="space-y-2 text-stone-700 font-serif">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>75 $</strong> — Sylvie Bourgeois</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>500 $</strong> — Photo|Société</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>250 $</strong> — Revue Sociologie Visuelle</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>50 $</strong> — Jean-Marc L.</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>25 $</strong> — Suzanne D.</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>100 $</strong> — Martin Meunier</li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span><strong>250 $</strong> — Hortense Dufour</li>
+                </ul>
 
-      const headerDiv = document.createElement('div');
-      headerDiv.className = 'season-header';
+                <div class="pt-4 border-t border-stone-200 font-sans font-semibold text-stone-900 text-sm">
+                    Total amassé à ce jour : 1 250 $ sur un objectif de 5 000 $.
+                </div>
+            </div>
 
-      const title = document.createElement('h2');
-      title.className = 'season-title';
-      
-      const videoCount = season.episodes.length;
-      title.innerHTML = `${season.title} <span class="season-count">(${videoCount})</span>`;
-      headerDiv.appendChild(title);
+            <div class="p-4 border-t border-stone-200 bg-[#f9f8f6] flex justify-end">
+                <button onclick="closeContributionsModal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer</button>
+            </div>
+        </div>
+    </div>
 
-      if (season.notice) {
-        const notice = document.createElement('span');
-        notice.className = 'season-notice';
-        notice.textContent = season.notice;
-        headerDiv.appendChild(notice);
-      }
+    <!-- FENÊTRE MODALE : ZOOM DIAPOSITIVE -->
+    <div id="slideModal" class="fixed inset-0 bg-stone-950/80 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white border border-stone-300 rounded-lg max-w-5xl w-full overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-4 border-b border-stone-200 flex justify-between items-center bg-[#f4f2eb]">
+                <h3 id="modal-slide-title" class="text-sm font-bold uppercase tracking-wider text-amber-800">Visualisation de la diapositive</h3>
+                <button onclick="closeSlideModal()" class="text-stone-500 hover:text-stone-900 p-1 rounded transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-4 bg-[#f9f8f6] flex justify-center items-center max-h-[80vh]">
+                <img id="modal-slide-img" src="" alt="Diapositive en grand format" class="max-h-[75vh] object-contain rounded shadow-sm">
+            </div>
+            <div class="p-3 border-t border-stone-200 bg-white flex justify-end">
+                <button onclick="closeSlideModal()" class="px-4 py-2 bg-stone-900 text-white text-xs font-semibold rounded hover:bg-stone-800 transition">Fermer et poursuivre l'écoute</button>
+            </div>
+        </div>
+    </div>
 
-      row.appendChild(headerDiv);
+    <!-- SCRIPT DE NAVIGATION INTERACTIVE ET SYNCHRONISATION AUDIO MODULAIRE -->
+    <script>
+        const btnText = document.getElementById('btn-text');
+        const viewText = document.getElementById('view-text');
+        const viewSource = document.getElementById('view-source');
+        const viewVideos = document.getElementById('view-videos');
+        const viewSlide = document.getElementById('view-slide');
+        
+        // Vues associées au dossier des diocèses
+        const viewDioceseMaster = document.getElementById('view-diocese-master');
+        const viewDioceseAssocFrontieres = document.getElementById('view-diocese-assoc-frontieres');
+        
+        const slideImg = document.getElementById('slide-img');
+        const slideTitle = document.getElementById('slide-title');
+        
+        let audioPlayer = document.getElementById('audioPlayer');
+        if (!audioPlayer) {
+            audioPlayer = document.createElement('audio');
+            audioPlayer.id = 'audioPlayer';
+            document.body.appendChild(audioPlayer);
+        }
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'carousel-wrapper';
+        const audioPlayerDiocese = document.getElementById('audioPlayerDiocese');
+        const audioPlayerDioceseFrontieres = document.getElementById('audioPlayerDioceseFrontieres');
 
-      const btnLeft = document.createElement('button');
-      btnLeft.className = 'nav-btn left';
-      btnLeft.innerHTML = '&#10094;';
-      btnLeft.onclick = () => scrollCarousel(carousel, -600);
+        const aboutModal = document.getElementById('aboutModal');
+        const aboutProjectModal = document.getElementById('aboutProjectModal');
+        const presentationModal = document.getElementById('presentationModal');
+        const presentationVideoContainer = document.getElementById('presentationVideoContainer');
+        const tournageModal = document.getElementById('tournageModal');
+        const phase3Modal = document.getElementById('phase3Modal');
+        const contributionsModal = document.getElementById('contributionsModal');
+        const autoTimestampPhase3 = document.getElementById('autoTimestampPhase3');
+        const autoTimestampContributions = document.getElementById('autoTimestampContributions');
 
-      const btnRight = document.createElement('button');
-      btnRight.className = 'nav-btn right';
-      btnRight.innerHTML = '&#10095;';
-      btnRight.onclick = () => scrollCarousel(carousel, 600);
+        // Éléments et état de la modale de zoom des slides
+        const slideModal = document.getElementById('slideModal');
+        const modalSlideImg = document.getElementById('modal-slide-img');
+        const modalSlideTitle = document.getElementById('modal-slide-title');
+        let isSlideModalOpen = false;
 
-      const carousel = document.createElement('div');
-      carousel.className = 'carousel';
+        function openSlideModal(imgSrc, titleText) {
+            if (!imgSrc) return;
+            modalSlideImg.src = imgSrc;
+            modalSlideTitle.textContent = titleText || "Visualisation de la diapositive";
+            slideModal.classList.remove('hidden');
+            isSlideModalOpen = true;
+        }
 
-      season.episodes.forEach(ep => {
-        const card = document.createElement('div');
-        card.className = 'card';
+        function closeSlideModal() {
+            slideModal.classList.add('hidden');
+            isSlideModalOpen = false;
+        }
 
-        card.onclick = () => {
-          document.querySelectorAll('.card.highlight-card').forEach(c => c.classList.remove('highlight-card'));
-          logEvent('Vidéo', season.title, ep.title);
-          playDriveVideo(ep.fileId, ep.title, ep.synopsis);
+        function openSlideModalFromElement(imgId, titleId) {
+            const imgEl = document.getElementById(imgId);
+            const titleEl = document.getElementById(titleId);
+            if (imgEl && imgEl.src) {
+                openSlideModal(imgEl.src, titleEl ? titleEl.textContent : "");
+            }
+        }
+
+        // Base de données centralisée unifiée pour les sous-articles du dossier diocésain
+        const subArticlesData = {
+            dossierDiocese: [
+                {
+                    id: "master",
+                    part: "Partie 1",
+                    title: "L'Église, le diocèse et le territoire",
+                    description: "La géopolitique ecclésiastique et le découpage de territoires invisibles.",
+                    action: "showDioceseContent()"
+                },
+                {
+                    id: "assoc-frontieres",
+                    part: "Partie 2",
+                    title: "Les frontières géographiques des diocèses",
+                    description: "Analyse détaillée du découpage territorial et des limites ecclésiastiques.",
+                    action: "showDioceseFrontieresContent()"
+                }
+            ]
         };
 
-        const img = document.createElement('img');
-        img.src = ep.imageId 
-          ? `https://lh3.googleusercontent.com/d/${ep.imageId}` 
-          : ep.image;
-        img.alt = ep.title;
+        // Fonction centralisée pour injecter la liste unifiée dans le wrapper identifié
+        function renderSubArticles(containerId, currentArticleId, parentId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-        const video = document.createElement('video');
-        video.muted = true;
-        video.loop = true;
-        video.preload = "metadata";
+            const articles = subArticlesData.dossierDiocese || [];
+            
+            let cardsHTML = articles.map(art => {
+                const isActive = art.id === currentArticleId;
+                return `
+                    <div class="sub-article-card ${isActive ? 'active border-2 border-amber-700 shadow-sm' : 'border border-stone-200'} flex-0-0 bg-white rounded p-3.5 cursor-pointer transition-all hover:shadow-md" onclick="${art.action}">
+                        <span class="text-[10px] uppercase font-bold text-amber-800 tracking-wider block mb-1">${art.part} ${isActive ? ' (Actuel)' : ''}</span>
+                        <h4 class="text-xs font-bold text-stone-900 leading-snug mb-1">${art.title}</h4>
+                        <p class="text-[11px] text-stone-600 line-clamp-2">${art.description}</p>
+                    </div>
+                `;
+            }).join('');
 
-        const info = document.createElement('div');
-        info.className = 'card-info';
-        info.innerHTML = `
-          <div class="card-title">${ep.title}</div>
-          <div class="card-subtitle">${ep.duration}</div>
-        `;
-
-        video.src = `https://drive.google.com/uc?export=download&id=${ep.fileId}`;
-        video.addEventListener('loadedmetadata', () => {
-          const formatted = formatDuration(video.duration);
-          ep.duration = formatted;
-          const subtitleEl = info.querySelector('.card-subtitle');
-          if (subtitleEl) {
-            subtitleEl.textContent = formatted;
-          }
-        });
-
-        card.addEventListener('mouseenter', () => {
-          video.play().catch(() => {});
-        });
-
-        card.addEventListener('mouseleave', () => {
-          video.pause();
-          video.currentTime = 0;
-        });
-
-        card.appendChild(img);
-        card.appendChild(video);
-        card.appendChild(info);
-        carousel.appendChild(card);
-      });
-
-      wrapper.appendChild(btnLeft);
-      wrapper.appendChild(carousel);
-      wrapper.appendChild(btnRight);
-      row.appendChild(wrapper);
-      container.appendChild(row);
-    });
-
-    const heroBanner = document.getElementById('heroBanner');
-    const heroVideo = document.getElementById('heroVideo');
-
-    heroBanner.addEventListener('mouseenter', () => {
-      heroVideo.play().catch(() => {});
-    });
-
-    heroBanner.addEventListener('mouseleave', () => {
-      heroVideo.pause();
-      heroVideo.currentTime = 0;
-    });
-
-    function scrollCarousel(carousel, distance) {
-      carousel.scrollBy({ left: distance, behavior: 'smooth' });
-    }
-
-    function playDriveVideo(fileId, episodeTitle, episodeSynopsis) {
-      const modal = document.getElementById('videoModal');
-      const modalContent = document.getElementById('modalContentWrapper');
-      const videoContainer = document.getElementById('modalVideoContainer');
-      const player = document.getElementById('drivePlayer');
-      const titleEl = document.getElementById('modalEpisodeTitle');
-      const textEl = document.getElementById('modalEpisodeText');
-      const textContainer = document.getElementById('modalTextContainer');
-
-      modalContent.classList.remove('info-only');
-      videoContainer.style.display = 'flex';
-
-      player.src = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1`;
-      titleEl.textContent = episodeTitle || "Extrait de la thèse";
-      textEl.innerHTML = episodeSynopsis || defaultThesisSynopsis;
-
-      textContainer.scrollTop = 0;
-      modal.classList.add('active');
-
-      setTimeout(() => {
-        if (videoContainer) {
-          player.focus();
-          const rect = videoContainer.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-
-          const mouseEvent = new MouseEvent('mousemove', {
-            bubbles: true,
-            cancelable: true,
-            clientX: centerX,
-            clientY: centerY
-          });
-          videoContainer.dispatchEvent(mouseEvent);
+            container.innerHTML = `
+                <div id="sub-articles-track-${parentId}" class="sub-articles-group-wrapper" data-master-parent="${parentId}">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2 text-amber-800">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6"></path>
+                            </svg>
+                            <span class="text-xs font-bold uppercase tracking-wider">Navigation du dossier : Études sur les diocèses</span>
+                        </div>
+                        <span class="text-[11px] text-stone-500 italic">Faites défiler pour explorer</span>
+                    </div>
+                    <div class="flex gap-4 overflow-x-auto pb-2">
+                        ${cardsHTML}
+                    </div>
+                </div>
+            `;
         }
-      }, 100);
-    }
 
-    function openInfoModal() {
-      const modal = document.getElementById('videoModal');
-      const modalContent = document.getElementById('modalContentWrapper');
-      const videoContainer = document.getElementById('modalVideoContainer');
-      const player = document.getElementById('drivePlayer');
-      const titleEl = document.getElementById('modalEpisodeTitle');
-      const textEl = document.getElementById('modalEpisodeText');
-      const textContainer = document.getElementById('modalTextContainer');
+        // Cues spécifiques pour le diaporama du module frontières
+        const frontieresCues = [
+            { start: 0,    end: 20,    url: 'https://lh3.googleusercontent.com/d/1Q_oaS1Cbu4Fdp2_5MNhhvN66hCMe9T93', title: 'Diapositive 1' },
+            { start: 20,    end: 37,    url: 'https://lh3.googleusercontent.com/d/1YpdHYbzJnBYWsKCq5zp0wxT1IigclMRo', title: 'Diapositive 2' },
+            { start: 37,    end: 51,    url: 'https://lh3.googleusercontent.com/d/1Q1HQxKfGHjXMHXyb77yoe6ZVBeC3Qarx', title: 'Diapositive 3' },
+            { start: 51,    end: 63,    url: 'https://lh3.googleusercontent.com/d/13OxqsZYxzGxipncgFP1ME95gmtlxbhSA', title: 'Diapositive 4' },
+            { start: 63,    end: 80,    url: 'https://lh3.googleusercontent.com/d/1kwk20li534pZpeUuTEJouoLSdis31Uij', title: 'Diapositive 5' },
+            { start: 80,    end: 98,    url: 'https://lh3.googleusercontent.com/d/1gosaMlc_ggFsStlokFLSLRo-Y37X-Ua5', title: 'Diapositive 6' },
+            { start: 98,    end: 114,   url: 'https://lh3.googleusercontent.com/d/1i67eENTPWfgMZCfC-2_Z7mWzNGN-A-BB', title: 'Diapositive 7' },
+            { start: 114,   end: 130,   url: 'https://lh3.googleusercontent.com/d/15J34L-naxpNpZgKy_fTsVOu667i1I5R9', title: 'Diapositive 8' },
+            { start: 130,   end: 147,   url: 'https://lh3.googleusercontent.com/d/1EFw9I_z2eUPnI2W3l0FtK8i5J6Iz7F7b', title: 'Diapositive 9' },
+            { start: 147,   end: 169,   url: 'https://lh3.googleusercontent.com/d/1S8f5zyOPp7ud3Z8FytGOGghaxQgDsFks', title: 'Diapositive 10' },
+            { start: 169,   end: 188,   url: 'https://lh3.googleusercontent.com/d/1ncVm_NwwqtQk0asLp1oIrq5UVjqTIcC7', title: 'Diapositive 11' },
+            { start: 188,   end: 215,   url: 'https://lh3.googleusercontent.com/d/12FZU6Cj__IyE-DVccSILFjPtrGeh8FE8', title: 'Diapositive 12' },
+            { start: 215,   end: 236,   url: 'https://lh3.googleusercontent.com/d/1fnlmNJf8hySpt1GJqgzc87ESuAKi_AhB', title: 'Diapositive 13' },
+            { start: 236,   end: 261,   url: 'https://lh3.googleusercontent.com/d/1_Tq89aEKwg8MiIb6wnmOh0rgEUxJVzm_', title: 'Diapositive 14' },
+            { start: 261,   end: 288,   url: 'https://lh3.googleusercontent.com/d/19-Cs6n0yNRVNkDC9vlx2UIpphSaOD0ri', title: 'Diapositive 15' },
+            { start: 288,   end: 310,   url: 'https://lh3.googleusercontent.com/d/16upZtlao5cyfI7rzMvfYy9QTfGpkAhzj', title: 'Diapositive 16' },
+            { start: 310,   end: 337,   url: 'https://lh3.googleusercontent.com/d/19PKci41ctlCVMou-Q2_x-clD1zgnhABb', title: 'Diapositive 17' },
+            { start: 337,   end: 358,   url: 'https://lh3.googleusercontent.com/d/14L2ewUie3wbMFQQ6WGMVi-oNRr6XrkKM', title: 'Diapositive 18' },
+            { start: 358,   end: 387,   url: 'https://lh3.googleusercontent.com/d/1Rxp9iVhangWeR-1jH54jUcNDeLOBjygx', title: 'Diapositive 19' },
+            { start: 387,   end: 406,   url: 'https://lh3.googleusercontent.com/d/1mQqwKUmWrBWKa12HDH8MNYg-8gPV3gfh', title: 'Diapositive 20' },
+            { start: 406,   end: 439,   url: 'https://lh3.googleusercontent.com/d/15dB90KeGlTuX_OayA9KELPVWufGkpMFg', title: 'Diapositive 21' }
+        ];
 
-      player.src = '';
-      videoContainer.style.display = 'none';
-      modalContent.classList.add('info-only');
+        // Cues communs pour la synchronisation des diapositives audio (autres modules)
+        const slideCues = [
+            { start: 0,    end: 14,    url: 'https://lh3.googleusercontent.com/d/1GZ1Binsm9JU40u9-YYP3Z-1dNHzuPQKW', title: 'Diapositive 1' },
+            { start: 14,    end: 28,    url: 'https://lh3.googleusercontent.com/d/1gPp-A-RNk4w-Z2HhIgkuy4L24Me1mfb4', title: 'Diapositive 2' },
+            { start: 28,    end: 41,    url: 'https://lh3.googleusercontent.com/d/192abE5cXXJOhM5-hPJX8kiBr9krHhvZJ', title: 'Diapositive 3' },
+            { start: 41,    end: 55,    url: 'https://lh3.googleusercontent.com/d/1GDP4OZTkAqykNrd9GT69gdi3ovHp26bP', title: 'Diapositive 4' },
+            { start: 55,    end: 72,    url: 'https://lh3.googleusercontent.com/d/1RxpS0-ZRDMTT67daGgzeKHwWo1annQSq', title: 'Diapositive 5' },
+            { start: 72,    end: 87,    url: 'https://lh3.googleusercontent.com/d/13Kb-my0OhUvuEUjzEMnA5yD1DfyBRJPh', title: 'Diapositive 6' },
+            { start: 87,    end: 102,    url: 'https://lh3.googleusercontent.com/d/1zRPx61Uq8_RPif3a7TpIN9p8BrJen9Hc', title: 'Diapositive 7' },
+            { start: 102,    end: 116,    url: 'https://lh3.googleusercontent.com/d/1p6Yr3YGtpjXAQ2sE9YBMfzfShtJHDbTB', title: 'Diapositive 8' },
+            { start: 116,    end: 133,    url: 'https://lh3.googleusercontent.com/d/1v-mSsUzSo8TkmNoQHni7_xcyCa-W6Sa9', title: 'Diapositive 9' },
+            { start: 133,    end: 148,    url: 'https://lh3.googleusercontent.com/d/14EEcMnsu8l1URR5JsDh4jric5kqlnWrE', title: 'Diapositive 10' },
+            { start: 148,    end: 162,    url: 'https://lh3.googleusercontent.com/d/1SSVQAA9Mo5Q6JnlsofXI2s_UiLzCMaMw', title: 'Diapositive 11' },
+            { start: 162,    end: 177,    url: 'https://lh3.googleusercontent.com/d/1AwLwaftpk6jfAHYHQjxK2tlqg8h_LELn', title: 'Diapositive 12' },
+            { start: 177,    end: 193,    url: 'https://lh3.googleusercontent.com/d/1PipdPoET-KKEi0ZdPdmGl3N8TXfyuT0R', title: 'Diapositive 13' },
+            { start: 193,    end: 208,    url: 'https://lh3.googleusercontent.com/d/1fLP6UHEGNJq3kuxx5nGeQiW-02D0vol-', title: 'Diapositive 14' },
+            { start: 208,    end: 224,    url: 'https://lh3.googleusercontent.com/d/1c-340TYsNjLCRDNX8uqM4HcrwzmH1zJX', title: 'Diapositive 15' },
+            { start: 224,    end: 239,    url: 'https://lh3.googleusercontent.com/d/199L4Jaeg9BUapzjpL52eL9u60aMl6dCd', title: 'Diapositive 16' },
+            { start: 239,    end: 254,    url: 'https://lh3.googleusercontent.com/d/1xsTYvu00Qd7lyFZ0CprJRvH_q5pk6MN8', title: 'Diapositive 17' },
+            { start: 254,    end: 269,    url: 'https://lh3.googleusercontent.com/d/10DjaVWj77dIDYEqX6kf3w8qMT8OGdgZN', title: 'Diapositive 18' },
+            { start: 269,    end: 284,    url: 'https://lh3.googleusercontent.com/d/1IK1on8xIQIZON5yr26IyUoA1V-oxkptJ', title: 'Diapositive 19' },
+            { start: 284,    end: 299,    url: 'https://lh3.googleusercontent.com/d/1YKRKalmFn8v_o9KigISTKfOvNeLkg4WJ', title: 'Diapositive 20' },
+            { start: 299,    end: 320,    url: 'https://lh3.googleusercontent.com/d/1hv4-02QktNwsDQVdycI_NAwqzDbqysJ5', title: 'Diapositive 21' }
+        ];
 
-      titleEl.textContent = "À propos du projet";
-      textEl.innerHTML = "La décision de soustraire \"L’aventure du corps\" aux logiques algorithmiques des grandes plateformes relève d’une résistance nécessaire contre l'uniformisation du regard et la marchandisation de l’attention. Les géants du numérique fragmentent la pensée, broient la complexité épistémologique et réduisent une recherche doctorale à un flux de consommation stérile. Refuser cette vitrine, c’est refuser la soumission aux métriques de l'engagement. Pour autant, paradoxalement, je confie le contenant à l'intelligence artificielle. Cette armature technologique, loin de trahir le travail universitaire initial, agit comme un scalpel structurel. L'IA devient ici l'architecte invisible d'une diffusion rigoureuse, préservant l'intégrité conceptuelle tout en contournant l'entropie des réseaux sociaux dominants.";
+        // Fonction d'initialisation de la synchronisation audio mise à jour pour piloter la modale en direct
+        function setupAudioSync(audioId, containerId, imgId, titleId, cues) {
+            const audioElement = document.getElementById(audioId);
+            const container = document.getElementById(containerId);
+            const img = document.getElementById(imgId);
+            const titleEl = document.getElementById(titleId);
+            
+            if (!audioElement || !container || !img || !titleEl) return;
 
-      textContainer.scrollTop = 0;
-      modal.classList.add('active');
-    }
+            let activeCueIndex = -1;
 
-    function openPayPalModal() {
-      const modal = document.getElementById('videoModal');
-      const modalContent = document.getElementById('modalContentWrapper');
-      const videoContainer = document.getElementById('modalVideoContainer');
-      const player = document.getElementById('drivePlayer');
-      const titleEl = document.getElementById('modalEpisodeTitle');
-      const textEl = document.getElementById('modalEpisodeText');
-      const textContainer = document.getElementById('modalTextContainer');
+            audioElement.addEventListener('timeupdate', () => {
+                const currentTime = audioElement.currentTime;
+                const index = cues.findIndex(cue => currentTime >= cue.start && currentTime < cue.end);
+                
+                if (index !== -1 && index !== activeCueIndex) {
+                    activeCueIndex = index;
+                    const cue = cues[index];
+                    
+                    let imageUrl = cue.url;
+                    if (imageUrl.includes('drive.google.com') && imageUrl.includes('/view')) {
+                        imageUrl = imageUrl.replace('/view', '/preview');
+                    }
+                    
+                    img.src = cue.url;
+                    titleEl.textContent = `Diapositive — ${cue.title} (${Math.floor(cue.start)}s)`;
+                    container.classList.remove('hidden');
 
-      videoContainer.style.display = 'none';
-      modalContent.classList.add('info-only');
-      player.src = '';
+                    // Si la modale est ouverte, actualiser son contenu en temps réel
+                    if (isSlideModalOpen) {
+                        modalSlideImg.src = cue.url;
+                        modalSlideTitle.textContent = `Visualisation — ${cue.title} (${Math.floor(cue.start)}s)`;
+                    }
+                }
+            });
 
-      titleEl.textContent = "Soutenir le projet";
-      textEl.innerHTML = `
-        <p style="margin-bottom: 20px;">Votre contribution permet de soutenir la pérennité et la diffusion indépendante de cette série documentaire et de ses travaux de recherche associés.</p>
-        <div style="text-align: center; margin-top: 30px;">
-          <a href="https://www.paypal.com/donate/?hosted_button_id=SPATMUXAZJWHU" target="_blank" rel="noopener noreferrer" style="background-color: #ffc439; color: #003087; padding: 12px 24px; border-radius: 4px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="#003087">
-              <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .758-.63h6.35c2.42 0 4.25.59 5.29 1.71 1.01 1.09 1.25 2.76.71 4.96-.69 2.82-2.31 4.67-4.81 5.51-1.12.38-2.48.57-4.04.57H7.72a.56.56 0 0 0-.55.47l-.094.527-.01.05-1.026 5.816a.41.41 0 0 0 .405.479zm11.233-14.8c-.53-.6-1.53-.94-3.04-.94H10.15a.43.43 0 0 0-.42.36l-1.39 8.86h2.15c1.17 0 2.2-.13 3.06-.41 1.95-.64 3.23-2.02 3.77-4.22.42-1.7-.12-2.91-1.14-3.65z"/>
-            </svg>
-            Procéder au don sécurisé sur PayPal
-          </a>
-        </div>
-      `;
+            audioElement.addEventListener('pause', () => {
+                container.classList.add('hidden');
+                activeCueIndex = -1;
+            });
 
-      textContainer.scrollTop = 0;
-      modal.classList.add('active');
-    }
+            audioElement.addEventListener('ended', () => {
+                container.classList.add('hidden');
+                activeCueIndex = -1;
+            });
+        }
 
-    function closeModal() {
-      const modal = document.getElementById('videoModal');
-      const player = document.getElementById('drivePlayer');
-      player.src = '';
-      modal.classList.remove('active');
-    }
+        // Initialisation globale au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSubArticles('sub-articles-container-diocese', 'master', 'diocese-master');
+            renderSubArticles('sub-articles-container-frontieres', 'assoc-frontieres', 'diocese-master');
 
-    window.onclick = function(event) {
-      const videoModal = document.getElementById('videoModal');
-      if (event.target === videoModal) {
-        closeModal();
-      }
-    }
+            setupAudioSync('audioPlayerDiocese', 'synced-slide-container-diocese', 'audio-slide-img-diocese', 'audio-slide-title-diocese', slideCues);
+            setupAudioSync('audioPlayerDioceseFrontieres', 'synced-slide-container-frontieres', 'audio-slide-img-frontieres', 'audio-slide-title-frontieres', frontieresCues);
+        });
 
-    window.addEventListener('scroll', () => {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
-  </script>
+        let currentActiveIndex = -1;
+
+        const videoPlaylists = {
+            'playlist-batisseurs': [
+                {
+                    title: "Bâtisseurs d'églises",
+                    url: "https://drive.google.com/file/d/1OAostYBMsuQlohb1vkdtnjwNiA2ZE8ob/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/15ponkzwjsezYH0yaJ8bZgOGqwCMEbE7d",
+                    synopsis: "L'érection des sanctuaires paroissiaux fut le fruit d'un effort collectif titanesque, unissant la piété populaire, le savoir-faire des maîtres artisans et la volonté des communautés rurales. Ces bâtisseurs d'églises ont façonné l'ossature même du territoire québécois, érigeant au cœur de chaque village un phare spirituel et identitaire incontesté. En revisitant leur labeur, nous mesurons l'ampleur de la rupture actuelle, alors que ces monuments de pierre et de foi subissent l'implacable loi de l'abandon et de la spéculation immobilière."
+                },
+                {
+                    title: "Architecture qui transcende",
+                    url: "https://drive.google.com/file/d/1cA65_vPZ6yF5jTU4e5p2P7zb2O-bd3hD/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1MGUL0I3cjE8lSlfYhnZcqpyUhvWczfO2",
+                    synopsis: "L'architecture religieuse ne se limite pas seulement à la simple ordonnance de la pierre et du bois ; elle incarne cette aspiration métaphysique par laquelle les sociétés d'autrefois cherchaient à toucher l'absolu. En dressant des élans verticaux vers les cieux, ces sanctuaires sacrés structuraient l'espace habité tout en imprimant dans la conscience collective un horizon de transcendance. Aujourd'hui, face à la sécularisation galopante, c'est toute cette charge symbolique monumentale qui vacille et cherche de nouveaux repères."
+                },
+                {
+                    title: "Architecture à la Dom Bello",
+                    url: "https://drive.google.com/file/d/1t55GURFxUlA6VG_bgimoKnkuqzPvFfBE/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/13Rbo56arUKK7310qdS8k9mfyVblU-owx",
+                    synopsis: "L'empreinte artistique de Dom Bello à travers l'aménagement liturgique témoigne d'une volonté audacieuse de renouveler le langage plastique du sacré au Québec. En épousant les formes modernistes tout en respectant l'ordonnance spirituelle des lieux, cette approche architecturale a cherché à concilier l'exigence esthétique et la ferveur communautaire. C'est l'histoire d'un dialogue subtil entre modernité artistique et tradition ecclésiale, dont les vestiges sculptés continuent de hanter les espaces transformés de notre patrimoine bâti contemporain."
+                },
+                {
+                    title: "Grandes orgues du Québec",
+                    url: "https://drive.google.com/file/d/1suz8yHP2F3_i_chEb57LXwHStzwhjesh/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1-jQ_Eka4hvWov7kSVZ3yUIhZy9T240yh",
+                    synopsis: "Les grandes orgues constituaient la voix triomphante du divin, emplissant la nef de vibrations majestueuses qui unissaient les fidèles dans une même communion esthétique et spirituelle. Ces instruments monumentaux, véritables chefs-d'œuvre de la facture instrumentale, sombrent aujourd'hui dans le silence à mesure que s'éteignent les paroisses. Leur dispersion ou leur abandon silencieux illustre de manière poignante la désarticulation d'un univers sonore et symbolique qui structurait jadis la sensibilité collective de toute une nation sécularisée."
+                }
+            ],
+            'playlist-evolution': [
+                { 
+                    title: "L'évolution du catholicisme au Québec de 1960 à 2001", 
+                    url: "https://drive.google.com/file/d/18QAcmE5CYS9KOaF-EZ-0Nb-rQ2g_Atk4/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1hln9xKirdJGuTInVpU2KT07u2qe3ZwYN?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Amorcé par la Révolution tranquille, le déclin de l'emprise institutionnelle de l'Église catholique marque un basculement sociétal majeur. Le sociologue Martin Meunier analyse la transition d'une adhésion culturelle massive vers un effritement des pratiques régulières. Loin de s'effondrer instantanément, le catholicisme se fragmente, perdant son rôle de ciment national unificateur pour devenir une empreinte mémorielle discrète. Cette évolution redéfinit en profondeur les liens entre le croire, l'appartenance collective et les institutions séculières."
+                },
+                { 
+                    title: "La monté du pluralisme religieux au Québec", 
+                    url: "https://drive.google.com/file/d/1y4O-tVJ-zWJBfSwjo6x3962YFFjmcEJe/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1SDpa6wJFoK0DiXUnVkNg9LbY6m1xV3Fi?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "La décennie 2010 marque un tournant caractérisé par une accélération abrupte de la désaffection religieuse et une rupture générationnelle prononcée. Ce chapitre met en lumière le choc structurel qu'subit le catholicisme face à la baisse des ordinations, au vieillissement des pratiquants et à la fermeture en cascade des lieux de culte. La transmission intergénérationnelle s'étiole, érodant les derniers bastions de la sociabilité paroissiale et confrontant les communautés à l'avenir de leur patrimoine."
+                },
+                { 
+                    title: "Choc brutal pour le catholicisme à partir de 2011", 
+                    url: "https://drive.google.com/file/d/1gRT6Sh3og6zOGaoyz48Wh9DVrw3m47qW/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/19FSExjGVM3tv2tPT-oxPj1qrajkvcVyO?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "La décennie 2010 marque un tournant caractérisé par une accélération abrupte de la désaffection religieuse et une rupture générationnelle prononcée. Ce chapitre met en lumière le choc structurel qu'subit le catholicisme face à la baisse des ordinations, au vieillissement des pratiquants et à la fermeture en cascade des lieux de culte. La transmission intergénérationnelle s'étiole, érodant les derniers bastions de la sociabilité paroissiale et confrontant les communautés à l'avenir de leur patrimoine."
+                },
+                { 
+                    title: "La fin du catholicisme institutionnel", 
+                    url: "https://drive.google.com/file/d/1h2Pz5chPCWRpBDXw5yFTpwDQi3ewtw_K/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1FXniOjGo83sfJfPl8Cfesh2srIhmBm7r?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Ce volet synthétise la métamorphose historique du champ religieux québécois, passé d'une position majoritaire omniprésente à une présence minoritaire. L'analyse met en relief les défis de cette minorisation et la liquidation matérielle des biens religieux. En définitive, cette mutation transforme le fait catholique d'une obligation institutionnelle collective en une démarche spirituelle individuelle et optionnelle, redéfinissant radicalement la place de la religion dans l'espace public moderne." 
+                },
+                { 
+                    title: "Déclin de l'Église catholique", 
+                    url: "https://drive.google.com/file/d/18QAcmE5CYS9KOaF-EZ-0Nb-rQ2g_Atk4/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1MIRt_DSMhTYPcV-TjxxohQvWsbLgnOpD?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Cette capsule propose une synthèse rigoureuse des dynamiques structurelles qui marquent la désertion progressive des sanctuaires au Québec. Elle analyse l'impact direct de la baisse des vocations religieuses et du vieillissement des communautés, entraînant inexorablement la fermeture en cascade des lieux de culte. À travers un regard sociologique, ce volet met en lumière les défis inédits posés par la gestion de ce vide institutionnel et la perte des repères territoriaux traditionnels."
+                },
+                { 
+                    title: "L'Église triomphante", 
+                    url: "https://drive.google.com/file/d/1dW6qoTIp5fzfWbX8jJMyrt8nl0HdlC64/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1pL_jzuFw_fvSOwf5-AlXrQAIQYa003OF?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Ce segment explore en profondeur la période historique d'hégémonie et de centralité absolue de l'Église catholique au Québec. Il met en scène l'âge d'or du tissu paroissial et communautaire, où le clocher incarnait le cœur battant de la vie collective, morale et politique. En retraçant l'omniprésence institutionnelle de cette époque, la vidéo interroge la force du ciment identitaire national forgé par la foi avant les grands bouleversements de la modernité contemporaine."
+                },
+                { 
+                    title: "Rejet de l'Église catholique au Québec", 
+                    url: "https://drive.google.com/file/d/1QCTKfCN-_a1i8NgAGQE-MMhDF5cplbTI/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1kqrbt0TnJdYkz5h2Bm-TOApalSZSZ0Dq?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Cette analyse critique se penche sur les ruptures idéologiques profondes et la contestation populaire qui ont accompagné le détachement de la société québécoise envers l'institution religieuse. La Révolution tranquille et les décennies subséquentes ont agi comme des catalyseurs de libération intellectuelle, tout en engendrant un rejet parfois radical de l'emprise passée. La vidéo dissèque les tensions mémorielles et les règlements de compte collectifs qui marquent encore notre rapport actuel au patrimoine spirituel."
+                },
+                { 
+                    title: "Époque noire de l'Église catholique au Québec", 
+                    url: "https://drive.google.com/file/d/1IUU0ZcUZ1kKIP5fvnB4URBCsDwO_nyAg/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1khMr-6JuOIniJqvIGHxyt2fbVOZibfG2?auto=format&fit=crop&w=600&q=80",
+                    synopsis: "Ce chapitre aborde sans concession les zones d'ombre, les scandales institutionnels et les crises morales qui ont secoué l'Église catholique québécoise. En revisitant cette période sombre de l'histoire ecclésiale, la capsule met en lumière la fin d'un modèle d'autorité dogmatique et le bris de la confiance citoyenne. Cette rupture définitive a lourdement pesé sur la disqualification morale de l'institution, précipitant la transformation radicale et souvent douloureuse du paysage spirituel et culturel moderne."
+                }
+            ],
+            'playlist-eglises-sursis': [
+                {
+                    title: "Avant que tout ne s'efface",
+                    url: "https://drive.google.com/file/d/1trr-t9y0QLepb-NnqGGCTOF_QuXPQbII/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1Pvk1ryta48FPh0xMkOLpyn65G-pNSsqZ",
+                    synopsis: "Au Québec, le patrimoine religieux bâti subit une érosion rapide et silencieuse qui bouleverse en profondeur nos paysages et nos repères collectifs. Face à la multiplication des églises vendues, abandonnées, démolies ou requalifiées en espaces civils, la préservation de ces sanctuaires devient une urgence absolue. Cette capsule explore la nécessité impérieuse de consigner la mémoire de ces lieux habités d'histoire avant qu'ils ne disparaissent définitivement de notre conscience commune."
+                },
+                {
+                    title: "Une urgence qu'on ne lit pas face au patrimoine religieux du Québec",
+                    url: "https://drive.google.com/file/d/1wpCw6zGMUJiXkk5_R7yAtMKFHcIm1UCR/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1dxVWZbedNyD-3A7YAm67kP0EgFlzg1e-",
+                    synopsis: "Malgré l'état de délabrement avancé de nombreux édifices sacrés à travers la province, les autorités publiques tardent à impulser des actions concrètes et d'envergure. Cette lenteur bureaucratique contraste cruellement avec la vitesse de détérioration du bâti patrimonial. Le reportage dresse un constat sévère sur l'inertie décisionnelle face à cette crise culturelle, tout en soulignant le manque de lecture politique et sociale de l'urgence de protéger ces témoins architecturaux irremplaçables."
+                },
+                {
+                    title: "Le patrimoine religieux est une affaire de temps long",
+                    url: "https://drive.google.com/file/d/1GLQfjK04PtyxXFiGF3uSrvQ3zlns8trM/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1VU5kQyUmeSul_K7gON3Cxd97yJ8D-fwY",
+                    synopsis: "Penser la conservation du patrimoine religieux exige de s'affranchir de la tyrannie de l'immédiateté pour s'inscrire dans une perspective historique et sociologique de longue durée. Les cathédrales, églises et chapelles ne sont pas de simples pierres inertes, mais les dépositaires d'archives matérielles et immatérielles léguées par les générations passées. Cette réflexion met en lumière how ces structures décident durablement l'identité collective, exigeant des politiques de préservation à la hauteur de leur profondeur temporelle."
+                },
+                {
+                    title: "Fermer une église, une responsabilité partagée",
+                    url: "https://drive.google.com/file/d/1Hv4Phzltkuqe5H_kQyp2M7EoPBXyLVmU/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/158lNKppnHrq1X0MKgd-pm5puYB7DGXQV",
+                    synopsis: "La décision de fermer un lieu de culte n'est jamais purement administrative ; elle plonge les conseils de fabrique et les paroissiens au cœur de dilemmes déchirants, oscillant entre deuil communautaire et impératifs financiers. Cette capsule analyse la complexité de cette responsabilité partagée où s'entremêlent attachement cultuel, charges d'entretien insoutenables et négociations ardues. Elle met en scène la solitude des acteurs locaux face au démantèlement progressif du réseau paroissial traditionnel québécois."
+                },
+                {
+                    title: "Impacts d’une fermeture d'église",
+                    url: "https://drive.google.com/file/d/1AdZhwnz3OywUQMhsKwjPSWFy8906cvY2/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/18N5ow1FVgseqoyxskqGXB5rn1T97pW0c",
+                    synopsis: "La disparition d'un clocher au cœur d'un village ou d'un quartier urbain engendre des ondes de choc qui dépassent largement le cadre cultuel. Cet épisode examine minutieusement les répercussions sociales, culturelles et affectives de la fermeture des églises sur le tissu communautaire. En perdant leur point d'ancrage visuel et symbolique, les milieux de vie voir s'effriter des espaces séculaires de rassemblement, de solidarité et de construction d'une mémoire collective partagée par les citoyens."
+                },
+                {
+                    title: "Devoir de mémoire et patrimoine religieux",
+                    url: "https://drive.google.com/file/d/1o95PxT-OI4grwEowUytSqu_vUEKT54kv/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1wSNoNYHjBEzxNA60Urrsc0f-aqVlsDJQ",
+                    synopsis: "Face à la sécularisation rapide de la société et à la transformation des usages du territoire, l'obligation morale de transmettre l'histoire de notre architecture religieuse s'impose avec acuité. Ce segment propose une analyse sociologique rigoureuse sur la nécessité vitale de sauvegarder les mémoires, les récits et les objets qui racontent l'évolution spirituelle et communautaire du Québec. Le devoir de mémoire devient alors un acte de résistance culturelle pour comprendre d'où nous venons."
+                },
+                {
+                    title: "Comment préserver le patrimoine religieux bâti du Québec ?",
+                    url: "https://drive.google.com/file/d/1wpvIJwmlW43C7CHCzzcWn_DxvgAkn1sv/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/19BrpkULMvi0cShpLFUKus5L6WTSOCY5M",
+                    synopsis: "Cette capsule propose une analyse approfondie des défis complexes qui entourent la sauvegarde du patrimoine religieux bâti au Québec. Face à une vague d'abandon et à la disparition progressive de nombreux édifices emblématiques, il devient impératif d'examiner les facteurs socio-économiques et culturels en jeu. L'étude met en lumière la nécessité d'une prise de conscience collective et de stratégies novatrices pour assurer la pérennité architecturale de ces témoins précieux de notre histoire communautaire."
+                },
+                {
+                    title: "S'entendre pour préserver le patrimoine religieux",
+                    url: "https://drive.google.com/file/d/1Q5MYthcIq6OsyfBhuZQNQrsoolHce7xK/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1NgJ1MCiKnDWfMLt5F8sAxBsMk4W5t51P",
+                    synopsis: "On aborde ici l'importance cruciale et incontournable de la concertation multipartite entre les municipalités, les fabriques locales et les citoyens. Pour statuer efficacement sur l'avenir à long terme de ces édifices, le dialogue ouvert et structuré demeure la meilleure clé de voûte. En unissant leurs forces, les acteurs locaux parviennent à concilier les réalités financières et la valeur patrimoniale, évitant ainsi des décisions unilatérales préjudiciables au tissu social et culturel."
+                },
+                {
+                    title: "La stratégie de l'abandon par les promoteurs immobiliers",
+                    url: "https://drive.google.com/file/d/1tbBrGAhICQHwEAYeOiF6WaW5hJ_zSEC7/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1E9RmP15SoAXF6f3wk82kHhnO1h_Gn6s1",
+                    synopsis: "L'analyse se penche ici sur l'impact souvent destructeur des promoteurs immobiliers et leurs tactiques d'acquisition, de transformation ou de pure spéculation autour des anciens édifices religieux. En laissant volontairement dépérir le bâti pour justifier de futures démolitions, certaines logiques mercantiles menacent directement l'intégrité de notre mémoire collective. Cette démonstration expose au grand jour les dérives de la financiarisation du territoire et les failles réglementaires qui permettent de telles pratiques préjudiciables."
+                },
+                {
+                    title: "Une requalification d'église réussie",
+                    url: "https://drive.google.com/file/d/1EQoBsOZTFx7554sYkeNknhqLzw9I6rVt/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/12ogMyjeFQi99WPOqk3VfWioL-QWMS9Ox",
+                    synopsis: "Avec le cas détaillé de l'église Saint-Gabriel du comté de Bellechasse, cette vidéo met en valeur des exemples concrets et inspirants de reconversions réussites d'anciens lieux de culte en espaces civiques, culturels ou communautaires dynamiques. Ces initiatives démontrent qu'avec de l'audace, une planification rigoureuse et un engagement citoyen fort, il est tout à fait possible d'insuffler une nouvelle vie à ces structures. La transformation réussie témoigne de leur formidable potentiel d'adaptation au service direct des besoins contemporains de la collectivité."
+                }
+            ],
+            'playlist-reconversion': [
+                { 
+                    title: "Requalification d'église réussie", 
+                    url: "https://drive.google.com/file/d/1EQoBsOZTFx7554sYkeNknhqLzw9I6rVt/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/12ogMyjeFQi99WPOqk3VfWioL-QWMS9Ox",
+                    synopsis: "La requalification des édifices religieux représente un défi urbanistique majeur pour nos centres urbains contemporains. Face à la sécularisation et à l'abandon progressif de ces lieux de culte, transformer intelligemment ces monuments permet de sauvegarder l'architecture patrimoniale tout en répondant aux nouveaux besoins sociaux, culturels ou communautaires des citoyens. Cette démarche innovante insuffle une dynamique inédite aux quartiers, conciliant harmonieusement la préservation de la mémoire collective locale et l'adaptation pragmatique aux exigences de la modernité urbaine."
+                },
+                { 
+                    title: "Patrimoine religieux concertation", 
+                    url: "https://drive.google.com/file/d/1Q5MYthcIq6OsyfBhuZQNQrsoolHce7xK/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1NgJ1MCiKnDWfMLt5F8sAxBsMk4W5t51P",
+                    synopsis: "La sauvegarde du patrimoine religieux ne peut reposer uniquement sur des décisions unilatérales ou des interventions isolées. Elle exige une concertation rigoureuse et proactive entre les différentes parties prenantes, incluant les municipalités, les acteurs communautaires, les experts et les citoyens engagés. Seul un dialogue ouvert et constructif permet d'identifier des solutions pérennes pour ces sanctuaires menacés, en transformant les contraintes financières et architecturales en de véritables opportunités de co-construction territoriale et de renouvellement du lien social de proximité au Québec."
+                },
+                { 
+                    title: "Promoteurs immobiliers et patrimoine religieux bâti", 
+                    url: "https://drive.google.com/file/d/1tbBrGAhICQHwEAYeOiF6WaW5hJ_zSEC7/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1E9RmP15SoAXF6f3wk82kHhnO1h_Gn6s1",
+                    synopsis: "L'implication des promoteurs immobiliers dans la valorisation du patrimoine religieux bâti suscite à la fois des craintes légitimes et des espoirs de renouveau. Alors que la logique purement marchande menace parfois l'intégrité symbolique de ces sanctuaires, des partenariats audacieux et respectueux démontrent qu'il est possible d'allier rentabilité économique et préservation architecturale. En réinventant les usages de ces espaces monumentaux, les promoteurs deviennent des acteurs incontournables de la transition urbaine, pourvu que l'intérêt général et la protection de la mémoire collective demeurent au cœur des priorités."
+                },
+                { 
+                    title: "Préserver le patrimoine religieux bâti du Québec", 
+                    url: "https://drive.google.com/file/d/1wpvIJwmlW43C7CHCzzcWn_DxvgAkn1sv/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/19BrpkULMvi0cShpLFUKus5L6WTSOCY5M",
+                    synopsis: "Le patrimoine religieux bâti du Québec constitue l'ancre paysagère, historique et identitaire de nos villes et de nos villages. Sa préservation urgente dépasse la simple nostalgie esthétique : elle incarne un impératif fondamental de cohésion civique face aux dérives de l'étalement urbain et à l'amnésie collective. En redonnant vie à ces repères architecturaux à travers des projets multifonctionnels ancrés dans les réalités locales, la société québécoise s'efforce de conjurer la fragmentation croissante du tissu social et de réaffirmer la continuité de ses racines culturelles profondes."
+                },
+                { 
+                    title: "Patrimoine religieux est une affaire de temps long", 
+                    url: "https://drive.google.com/file/d/1GLQfjK04PtyxXFiGF3uSrvQ3zlns8trM/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1VU5kQyUmeSul_K7gON3Cxd97yJ8D-fwY",
+                    synopsis: "La question de la sauvegarde et du devenir du patrimoine religieux échappe aux logiques court-termistes de la rentabilité immédiate ou de l'urgence bureaucratique. Elle s'inscrit par essence dans la temporalité du temps long, celle des générations qui ont bâti ces sanctuaires et de celles qui devront en hériter. Appréhender ces édifices à travers cette perspective historique et sociologique permet de mesurer toute la profondeur des mutations en cours et de planifier des interventions durables qui respectent la mémoire collective ainsi que la vocation originelle d'hospitalité et d'enracinement."
+                }
+            ],
+            'playlist-role-social': [
+                { 
+                    title: "Rôle central de la paroisse dans la vie des gens", 
+                    url: "https://drive.google.com/file/d/1yvwr-K9rvqKKubCSC0MhIFzZjqDbI-Qf/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1Bcnc2A1180hysOqWby43PdGFsxW_ON4Y",
+                    synopsis: "La paroisse structurait intimement le quotidien des citoyens en encadrant les naissances, les mariages et les deuils tout en régulant la sociabilité de voisinage. Cette capsule explore la dimension anthropologique de cette organisation territoriale qui tissait un réseau d'entraide intergénérationnelle d'une remarquable robustesse. En perdant cet ancrage institutionnel central, les communautés subissent une mutation profonde de leurs repères identitaires et relationnels, redéfinissant entièrement les modalités de la solidarité et de l'engagement civique d'aujourd'hui."
+                },
+                { 
+                    title: "Rôle de la religion catholique dans l'économie", 
+                    url: "https://drive.google.com/file/d/17leXggEsFqMC0838anIKrjLEL8-dF16m/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/18D6spweOIkGqQu0j-7jjShrkteSgiSq0",
+                    synopsis: "L'institution ecclésiale a longtemps exercé une influence structurante sur l'économie locale, gérant des œuvres de bienfaisance, des institutions d'enseignement et des investissements immobiliers d'envergure. Cet exposé examine l'imbrication étroite entre la ferveur religieuse et les dynamiques matérielles qui ont façonné le développement des régions québécoises. La sécularisation moderne a entraîné le désengagement financier de l'Église, plongeant les municipalités et les citoyens face à des responsabilités économiques inédites pour maintenir ou reconvertir le patrimoine."
+                },
+                { 
+                    title: "Rôle des églises dans le roman de Gabrielle Roy - Bonheur d'occasion", 
+                    url: "https://drive.google.com/file/d/18x9BQgXKC5ScXjX5eVy_3YwW6d4YCduY/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1dqrpe-hi7Ykn4OuzRKC-przeXYy_C1mi",
+                    synopsis: "Sous la plume de Gabrielle Roy, le quartier Saint-Henri trouve dans ses églises des repères architecturaux et symboliques incontournables qui soutiennent les habitants au milieu de la misère ouvrière. Les édifices religieux s'y révèlent comme des espaces de refuge et d'espérance face aux rigueurs de la condition urbaine. Cette analyse littéraire et sociologique met en lumière la fonction cathartique et consolatrice des sanctuaires au cœur des drames humains de la modernité industrielle montréalaise."
+                },
+                { 
+                    title: "Relation avec l'église dans le roman Bonheur d'occasion de Gabrielle Roy", 
+                    url: "https://drive.google.com/file/d/138LY3WVLilYdI815qgGGI4F7Pdftwd8A/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1FuoolgKu4lXTPf8ln2pqWcsaxTdu7oLl",
+                    synopsis: "L'œuvre magistrale de Gabrielle Roy dépeint avec finesse la complexité des liens unissant les personnages à l'institution religieuse, oscillant entre soumission pieuse, réconfort spirituel et quête d'émancipation. L'église y apparaît à la fois comme un ciment protecteur et une instance de contrainte morale face aux aspirations individuelles. En revisitant ces trajectoires romanesques, la capsule questionne la manière dont la littérature a su consigner les mutations psychologiques et sociales d'une époque en pleine transition."
+                },
+                { 
+                    title: "L'église et la vie sociale dans le roman Bonheur d'occasion de Gabrielle Roy", 
+                    url: "https://drive.google.com/file/d/1_h12tiZMsvlrrqH8ppl6BPWSIusFQ-uL/preview?autoplay=1",
+                    thumbnail: "https://lh3.googleusercontent.com/d/1oC-1Y0g46_OHCYzekKlYuL-m76Wz5enM",
+                    synopsis: "Dans le chef-d'œuvre de Gabrielle Roy, la vie sociale des travailleurs de Saint-Henri s'articule constamment autour de la présence rassurante ou pesante des institutions ecclésiastiques. Cet épisode analyse how le roman capture les rituels collectifs, les rassemblements paroissiaux et la solidarité de classe qui s'organisent à l'ombre des clochers. L'édifice cultuel dépasse le simple décor pour devenir un acteur à part entière de la survie communautaire et de la dignité populaire."
+                }
+            ]
+        };
+
+        function stopVideoPlayer() {
+            const wrapper = document.getElementById('playerWrapper');
+            if (wrapper) {
+                wrapper.innerHTML = `
+                    <div class="video-poster-overlay" onclick="launchVideoFromCurrent()">
+                        <div class="play-button-ring">
+                            <svg class="w-8 h-8 text-white translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <span class="text-white text-sm font-medium mt-4 tracking-wide z-11">Lancer la lecture de la capsule</span>
+                    </div>
+                `;
+            }
+        }
+
+        let currentSelectedVideoUrl = "";
+
+        function toggleNetflixDrawer(articleId, playlistKey) {
+            audioPlayer.pause();
+            if(audioPlayerDiocese) audioPlayerDiocese.pause();
+            if(audioPlayerDioceseFrontieres) audioPlayerDioceseFrontieres.pause();
+            
+            viewText.classList.add('hidden');
+            viewSource.classList.add('hidden');
+            viewSlide.classList.add('hidden');
+            viewDioceseMaster.classList.add('hidden');
+            if(viewDioceseAssocFrontieres) viewDioceseAssocFrontieres.classList.add('hidden');
+            viewVideos.classList.remove('hidden');
+
+            const playlist = videoPlaylists[playlistKey];
+            if (!playlist || playlist.length === 0) return;
+
+            playVideoItem(playlist[0], 0, playlistKey);
+
+            const track = document.getElementById('netflixThumbnailsTrack');
+            track.innerHTML = '';
+
+            playlist.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `netflix-thumbnail-card ${index === 0 ? 'active' : ''}`;
+                card.id = `thumb-${index}`;
+                card.onclick = () => playVideoItem(item, index, playlistKey);
+                card.innerHTML = `
+                    <img src="${item.thumbnail}" alt="${item.title}" class="netflix-thumbnail-img">
+                    <div class="netflix-thumbnail-label" title="${item.title}">${item.title}</div>
+                `;
+                track.appendChild(card);
+            });
+        }
+
+        function playVideoItem(item, index, playlistKey) {
+            const playlist = videoPlaylists[playlistKey];
+            playlist.forEach((_, i) => {
+                const thumb = document.getElementById(`thumb-${i}`);
+                if (thumb) {
+                    if (i === index) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                }
+            });
+
+            currentSelectedVideoUrl = item.url;
+            const wrapper = document.getElementById('playerWrapper');
+            wrapper.innerHTML = `<iframe src="${item.url}" allow="autoplay; fullscreen; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+
+            document.getElementById('synopsisHeading').textContent = item.title;
+            document.getElementById('synopsisText').textContent = item.synopsis;
+
+            logToSheet('Vidéo — ' + item.title);
+        }
+
+        function launchVideoFromCurrent() {
+            if (!currentSelectedVideoUrl) return;
+            const wrapper = document.getElementById('playerWrapper');
+            wrapper.innerHTML = `<iframe src="${currentSelectedVideoUrl}" allow="autoplay; fullscreen; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
+        }
+
+        function showTextContent() {
+            audioPlayer.pause();
+            if(audioPlayerDiocese) audioPlayerDiocese.pause();
+            if(audioPlayerDioceseFrontieres) audioPlayerDioceseFrontieres.pause();
+            stopVideoPlayer();
+            
+            viewText.classList.remove('hidden');
+            viewSource.classList.add('hidden');
+            viewVideos.classList.add('hidden');
+            viewSlide.classList.add('hidden');
+            viewDioceseMaster.classList.add('hidden');
+            if(viewDioceseAssocFrontieres) viewDioceseAssocFrontieres.classList.add('hidden');
+        }
+
+        function showDioceseContent() {
+            audioPlayer.pause();
+            if(audioPlayerDioceseFrontieres) audioPlayerDioceseFrontieres.pause();
+            stopVideoPlayer();
+
+            viewText.classList.add('hidden');
+            viewSource.classList.add('hidden');
+            viewVideos.classList.add('hidden');
+            viewSlide.classList.add('hidden');
+            viewDioceseMaster.classList.remove('hidden');
+            if(viewDioceseAssocFrontieres) viewDioceseAssocFrontieres.classList.add('hidden');
+
+            logToSheet('Vue — L\'Église, le diocèse et le territoire (Maître)');
+        }
+
+        function showDioceseFrontieresContent() {
+            audioPlayer.pause();
+            if(audioPlayerDiocese) audioPlayerDiocese.pause();
+            stopVideoPlayer();
+
+            viewText.classList.add('hidden');
+            viewSource.classList.add('hidden');
+            viewVideos.classList.add('hidden');
+            viewSlide.classList.add('hidden');
+            viewDioceseMaster.classList.add('hidden');
+            if(viewDioceseAssocFrontieres) viewDioceseAssocFrontieres.classList.remove('hidden');
+
+            logToSheet('Vue — Les frontières géographiques des diocèses (Associé)');
+        }
+
+        function showSlide(imageUrl, title) {
+            stopVideoPlayer();
+            slideImg.src = imageUrl;
+            slideTitle.textContent = title;
+
+            // Actualiser aussi la modale en direct si elle est ouverte
+            if (isSlideModalOpen) {
+                modalSlideImg.src = imageUrl;
+                modalSlideTitle.textContent = title;
+            }
+
+            viewText.classList.add('hidden');
+            viewSource.classList.add('hidden');
+            viewVideos.classList.add('hidden');
+            viewDioceseMaster.classList.add('hidden');
+            if(viewDioceseAssocFrontieres) viewDioceseAssocFrontieres.classList.add('hidden');
+            viewSlide.classList.remove('hidden');
+        }
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const currentTime = audioPlayer.currentTime;
+            const index = slideCues.findIndex(cue => currentTime >= cue.start && currentTime < cue.end);
+            
+            if (index !== -1 && index !== currentActiveIndex) {
+                currentActiveIndex = index;
+                const cue = slideCues[index];
+                showSlide(cue.url, cue.title);
+            }
+        });
+
+        function openAboutModal() { aboutModal.classList.remove('hidden'); }
+        function closeAboutModal() { aboutModal.classList.add('hidden'); }
+
+        function openAboutProjectModal() { aboutProjectModal.classList.remove('hidden'); }
+        function closeAboutProjectModal() { aboutProjectModal.classList.add('hidden'); }
+
+        function openPresentationModal() {
+            presentationModal.classList.remove('hidden');
+            presentationVideoContainer.innerHTML = `<iframe src="https://lh3.googleusercontent.com/d/1trr-t9y0QLepb-NnqGGCTOF_QuXPQbII/preview?autoplay=1" allow="autoplay; fullscreen" class="w-full h-full border-0"></iframe>`;
+        }
+        function closePresentationModal() {
+            presentationModal.classList.add('hidden');
+            presentationVideoContainer.innerHTML = '';
+        }
+
+        function openTournageModal() { tournageModal.classList.remove('hidden'); }
+        function closeTournageModal() { tournageModal.classList.add('hidden'); }
+
+        function openPhase3Modal() {
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            let currentDate = new Date().toLocaleDateString('fr-FR', options);
+            currentDate = currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
+            autoTimestampPhase3.textContent = `En date du ${currentDate}`;
+            phase3Modal.classList.remove('hidden');
+        }
+        function closePhase3Modal() { phase3Modal.classList.add('hidden'); }
+
+        function openContributionsModal() {
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            let currentDate = new Date().toLocaleDateString('fr-FR', options);
+            currentDate = currentDate.charAt(0).toUpperCase() + currentDate.slice(1);
+            autoTimestampContributions.textContent = `En date du ${currentDate}`;
+            contributionsModal.classList.remove('hidden');
+        }
+        function closeContributionsModal() { contributionsModal.classList.add('hidden'); }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === aboutModal) closeAboutModal();
+            if (e.target === aboutProjectModal) closeAboutProjectModal();
+            if (e.target === presentationModal) closePresentationModal();
+            if (e.target === tournageModal) closeTournageModal();
+            if (e.target === phase3Modal) closePhase3Modal();
+            if (e.target === contributionsModal) closeContributionsModal();
+            if (e.target === slideModal) closeSlideModal();
+        });
+    </script>
+
+    <!-- SCRIPT DE SUIVI GOOGLE SHEETS -->
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyXFAUoDdQsakvQUapMNxeM-oBVxqOWOFwQ4cVjGgNWgmenGrBY5zhd12fe-lCX5gpf/exec';
+
+        function logToSheet(typeMessage) {
+            const now = new Date();
+            const date = now.toLocaleDateString('fr-FR');
+            const heure = now.toLocaleTimeString('fr-FR');
+
+            const payload = {
+                date: date,
+                heure: heure,
+                type: typeMessage,
+                elementTitre: ""
+            };
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            }).catch(error => console.error('Erreur lors du log :', error));
+        }
+
+        window.addEventListener('load', () => {
+            logToSheet('Ouverture de la page');
+        });
+
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (button) {
+                let titreBouton = "";
+                const onclickAttr = button.getAttribute('onclick') || "";
+
+                if (onclickAttr.includes('playlist-evolution')) {
+                    titreBouton = "Déclin de l'Église catholique";
+                } else if (onclickAttr.includes('playlist-eglises-sursis')) {
+                    titreBouton = "Le silence des clochers";
+                } else if (onclickAttr.includes('playlist-reconversion')) {
+                    titreBouton = "Reconversion ou démolition ?";
+                } else if (onclickAttr.includes('playlist-role-social')) {
+                    titreBouton = "Rôle social de l'Église";
+                } else if (onclickAttr.includes('playlist-batisseurs')) {
+                    titreBouton = "Les bâtisseurs d'église";
+                } else if (onclickAttr.includes('showTextContent')) {
+                    titreBouton = "Accueil";
+                } else if (onclickAttr.includes('showDioceseContent')) {
+                    titreBouton = "L'Église, le diocèse et le territoire";
+                } else if (onclickAttr.includes('showDioceseFrontieresContent')) {
+                    titreBouton = "Les frontières géographiques des diocèses";
+                } else {
+                    const span = button.querySelector('span');
+                    if (span) {
+                        titreBouton = span.innerText.trim();
+                    }
+                    if (!titreBouton) {
+                        titreBouton = button.innerText.replace(/[\r\n]+/g, " ").trim();
+                    }
+                }
+
+                if (!titreBouton || titreBouton === "") {
+                    titreBouton = "Action interactive";
+                }
+
+                logToSheet('Clic — ' + titreBouton);
+            }
+        });
+    </script>
+ 
 </body>
 </html>
